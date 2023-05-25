@@ -1,0 +1,5 @@
+# /logs/*.log
+.vscode/settings.json
+.devcontainer/devcontainer.json
+node_modules
+TODOs.txt
