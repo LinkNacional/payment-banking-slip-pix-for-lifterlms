@@ -1,0 +1,39 @@
+#: Payment Banking Slip Pix for LifterLMS en_US translation
+msgid "Activation Error:"
+msgstr ""
+
+msgid "You must have"
+msgstr ""
+
+msgid "LifterLMS"
+msgstr ""
+
+msgid "version"
+msgstr ""
+
+msgid "for the Payment Banking Slip Pix for LifterLMS to activate."
+msgstr ""
+
+msgid "plugin installed and activated for the Payment Banking Slip Pix for LifterLMS."
+msgstr ""
+
+msgid "Collect pix payments. Also handles any free orders during checkout."
+msgstr ""
+
+msgid "Pix"
+msgstr ""
+
+msgid "Payment via pix."
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""

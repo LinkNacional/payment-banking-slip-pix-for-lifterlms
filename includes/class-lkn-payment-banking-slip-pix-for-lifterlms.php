@@ -73,6 +73,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
+        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::verify_plugin_dependencies();
+        $this->init_gateways();
     }
 
     /**
@@ -118,6 +120,22 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         return $this->version;
     }
 
+    public function init_gateways(): void {
+        add_filter( 'lifterlms_payment_gateways', array($this, 'add_gateways') );
+    }
+
+    /**
+     * Add the PagHiper Payment gateway to the list of available gateways.
+     *
+     * @param array
+     * @param mixed $gateways
+     */
+    public static function add_gateways($gateways) {
+        $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix';
+
+        return $gateways;
+    }
+
     /**
      * Load the required dependencies for this plugin.
      *
@@ -156,6 +174,16 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
          * side of the site.
          */
         require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-payment-banking-slip-pix-for-lifterlms-public.php';
+
+        /**
+         * The class responsible for useful functions of plugin.
+         */
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-payment-banking-slip-pix-for-lifterlms-helper.php';
+
+        /**
+         * The class responsible for pix gateway.
+         */
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-payment-banking-slip-pix-for-lifterlms-pix.php';
 
         $this->loader = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader();
     }

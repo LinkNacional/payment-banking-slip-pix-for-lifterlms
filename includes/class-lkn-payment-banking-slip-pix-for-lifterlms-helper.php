@@ -8,6 +8,20 @@
  */
 final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
+     * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
+     *
+     * @since
+     */
+    final public static function get_llms_version() {
+        $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
+        $plugin_data = get_plugin_data($pluginPath);
+
+        if ($plugin_data) {
+            return $plugin_data['Version'];
+        }
+    }
+
+    /**
      * Show plugin dependency notice.
      *
      * @since
@@ -36,8 +50,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
 
         // Check the minimum version of LifterLMS and if it is enabled.
         if ($is_installed) {
-            // TODO criar uma funçãozinha para pegar a versão, já que não tem uma variável global disponível.
-            $LLMS_VERSION = $is_installed['Version'];
+            $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
 
             require_once ABSPATH . '/wp-content/plugins/lifterlms/lifterlms.php';
 
@@ -63,5 +76,55 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
                 unset($_GET['activate']);
             }
         }
+    }
+
+    /**
+     * Notice for lifterLMS dependecy.
+     *
+     * @since
+     */
+    final public static function dependency_notice(): void {
+        $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
+
+        // Admin notice.
+        $message = sprintf(
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
+            __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
+            __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
+            'https://lifterlms.com',
+            __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
+            __('version', 'payment-banking-slip-pix-for-lifterlms'),
+            $LLMS_VERSION,
+            __('for the Payment Banking Slip Pix for LifterLMS to activate', 'payment-banking-slip-pix-for-lifterlms')
+        );
+
+        echo $message;
+    }
+
+    /**
+     * Notice for No Core Activation.
+     *
+     * @since
+     */
+    final public static function inactive_notice(): void {
+        // Admin notice.
+        $message = sprintf(
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
+            __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
+            __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
+            'https://lifterlms.com',
+            __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
+            __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS', 'payment-banking-slip-pix-for-lifterlms')
+        );
+
+        echo $message;
+    }
+
+    final public static function dependency_alert(): void {
+        add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'dependency_notice'));
+    }
+
+    final public static function inactive_alert(): void {
+        add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
     }
 }
