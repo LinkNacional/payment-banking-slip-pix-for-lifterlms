@@ -137,6 +137,19 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
     }
 
     /**
+     * Returns an instance of the gateway.
+     *
+     * @since 1.0.0
+     *
+     * @param string $gateway_id
+     *
+     * @return Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix
+     */
+    public static function get_gateways($gateway_id) {
+        return llms()->payment_gateways()->get_gateway_by_id( $gateway_id );
+    }
+
+    /**
      * Load the required dependencies for this plugin.
      *
      * Include the following files that make up the plugin:

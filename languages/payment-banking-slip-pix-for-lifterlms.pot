@@ -17,7 +17,7 @@ msgstr ""
 msgid "plugin installed and activated for the Payment Banking Slip Pix for LifterLMS."
 msgstr ""
 
-msgid "Collect pix payments. Also handles any free orders during checkout."
+msgid "Allow customers to purchase courses and memberships using Pix."
 msgstr ""
 
 msgid "Pix"
