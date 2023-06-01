@@ -6,13 +6,15 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
+final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
+{
     /**
      * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
      *
      * @since
      */
-    final public static function get_llms_version() {
+    final public static function get_llms_version()
+    {
         $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
         $plugin_data = get_plugin_data($pluginPath);
 
@@ -26,7 +28,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
      *
      * @since
      */
-    final public static function verify_plugin_dependencies(): void {
+    final public static function verify_plugin_dependencies(): void
+    {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -35,7 +38,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         // Flag to check whether deactivate plugin or not.
         $is_deactivate_plugin = null;
 
-        $lkn_pay_bank_for_lifterLMS_path = ABSPATH . '/wp-content/plugins/payment-banking-slip-pix-for-lifterlms/lkn-payment-banking-slip-pix-for-lifterlms.php';
+        $lkn_pay_bank_for_lifterLMS_path = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE;
 
         $is_installed = false;
 
@@ -83,7 +86,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
      *
      * @since
      */
-    final public static function dependency_notice(): void {
+    final public static function dependency_notice(): void
+    {
         $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
 
         // Admin notice.
@@ -106,7 +110,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
      *
      * @since
      */
-    final public static function inactive_notice(): void {
+    final public static function inactive_notice(): void
+    {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
@@ -120,11 +125,25 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         echo $message;
     }
 
-    final public static function dependency_alert(): void {
+    final public static function dependency_alert(): void
+    {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'dependency_notice'));
     }
 
-    final public static function inactive_alert(): void {
+    final public static function inactive_alert(): void
+    {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
+    }
+
+    final public static function get_configs($gateway_id)
+    {
+        $configs = array();
+
+        $configs['paymentInstruction'] = give_get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id));
+        $configs['apiKey'] = give_get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
+        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+
+        return $configs;
     }
 }

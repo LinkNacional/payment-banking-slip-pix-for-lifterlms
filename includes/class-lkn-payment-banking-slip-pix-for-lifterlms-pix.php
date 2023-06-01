@@ -15,7 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.30.3 Explicitly define class properties.
  */
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix extends LLMS_Payment_Gateway {
+    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix extends LLMS_Payment_Gateway
+    {
         /**
          * A description of the payment proccess.
          *
@@ -23,7 +24,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @since 1.0.0
          */
-        public $payment_instructions;
+        protected $payment_instructions;
 
         /**
          * API Key.
@@ -50,7 +51,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version 3.10.0
          */
-        public function __construct() {
+        public function __construct()
+        {
             $this->set_variables();
 
             add_filter( 'llms_get_gateway_settings_fields', array($this, 'pix_settings_fields'), 10, 2 );
@@ -66,10 +68,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @return array
          */
-        public function pix_settings_fields($default_fields, $gateway_id) {
-            // Verify the gateway id to add correct settings.
+        public function pix_settings_fields($default_fields, $gateway_id)
+        {
             if ( $this->id === $gateway_id ) {
-                $fields = include LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
+                require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
+
+                $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings::set_settings();
 
                 $default_fields = array_merge( $default_fields, $fields );
             }
@@ -88,16 +92,16 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version  3.7.5
          */
-        public function get_instructions_field() {
-            $opt = $this->get_option( 'payment_instructions' );
-            if ( $opt ) {
-                $fields = '<div class="llms-notice llms-info"><h3>' . esc_html__( 'Payment Instructions', 'lifterlms' ) . '</h3>' . wpautop( wptexturize( wp_kses_post( $opt ) ) ) . '</div>';
-            } else {
-                $fields = '';
-            }
+        // public function get_instructions_field() {
+        //     $opt = $this->get_option( 'payment_instructions' );
+        //     if ( $opt ) {
+        //         $fields = '<div class="llms-notice llms-info"><h3>' . esc_html__( 'Payment Instructions', 'lifterlms' ) . '</h3>' . wpautop( wptexturize( wp_kses_post( $opt ) ) ) . '</div>';
+        //     } else {
+        //         $fields = '';
+        //     }
 
-            return apply_filters( 'llms_get_payment_instructions', $fields, $this->id );
-        }
+        //     return apply_filters( 'llms_get_payment_instructions', $fields, $this->id );
+        // }
 
         /**
          * Output payment instructions if the order is pending.
@@ -105,7 +109,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since 3.0.0
          * @since 6.4.0 Allowed classes extended from this pix payment gateway class to display payment instructions.
          */
-        public function before_view_order_table(): void {
+        public function before_view_order_table(): void
+        {
             global $wp;
 
             if ( ! empty( $wp->query_vars['orders'] ) ) {
@@ -116,7 +121,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                 ) {
                     // echo $this->get_instructions_field();
-                    echo 'Teste';
+                    echo 'Teste instrução';
                 }
             }
         }
@@ -134,7 +139,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version  3.10.0
          */
-        public function handle_payment_source_switch($order, $form_data = array()): void {
+        public function handle_payment_source_switch($order, $form_data = array()): void
+        {
             $previous_gateway = $order->get( 'payment_gateway' );
 
             if ( $this->get_id() === $previous_gateway ) {
@@ -161,15 +167,16 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @param LLMS_Student     $student student object
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
-        public function handle_pending_order($order, $plan, $student, $coupon = false) {
+        public function handle_pending_order($order, $plan, $student, $coupon = false)
+        {
             // Free orders (no payment is due).
             if ( (float) 0 === $order->get_initial_price( array(), 'float' ) ) {
                 // Free access plans do not generate receipts.
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'llms-completed' );
 
-                // Free trial, reduced to free via coupon, etc....
-                // We do want to record a transaction and then generate a receipt.
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -223,7 +230,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version  3.10.0
          */
-        public function handle_recurring_transaction($order) {
+        public function handle_recurring_transaction($order)
+        {
             // Switch to order on hold if it's a paid order.
             if ( $order->get_price( 'total', array(), 'float' ) > 0 ) {
                 // Update status.
@@ -243,11 +251,13 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version  3.0.0
          */
-        public function is_enabled() {
+        public function is_enabled()
+        {
             return ( 'yes' === $this->get_enabled() ) ? true : false;
         }
 
-        protected function set_variables(): void {
+        protected function set_variables(): void
+        {
             /*
              * The gateway unique ID.
              *
@@ -283,19 +293,21 @@ if (class_exists('LLMS_Payment_Gateway')) {
              */
             $this->description = __( 'Payment via pix', 'payment-banking-slip-pix-for-lifterlms' );
 
-            /*
-             * A description of the payment proccess displayed to users on checkout.
-             *
-             * @var string
-             */
-            $this->payment_instructions = '';
-
             $this->supports = array(
                 'checkout_fields' => true,
                 'refunds' => true,
                 'single_payments' => false,
                 'recurring_payments' => true,
                 'test_mode' => true,
+            );
+
+            $this->admin_order_fields = wp_parse_args(
+                array(
+                    'customer' => true,
+                    'source' => true,
+                    'subscription' => false,
+                ),
+                $this->admin_order_fields
             );
         }
     }

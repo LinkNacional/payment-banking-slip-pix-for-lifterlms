@@ -16,7 +16,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator {
+final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator
+{
     /**
      * Short Description. (use period).
      *
@@ -24,6 +25,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator {
      *
      * @since    1.0.0
      */
-    public static function activate(): void {
+    public static function activate(): void
+    {
     }
 }
