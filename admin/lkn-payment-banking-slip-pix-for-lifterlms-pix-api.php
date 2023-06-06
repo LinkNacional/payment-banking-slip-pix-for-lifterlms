@@ -53,39 +53,28 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         protected function set_request_body($data, $method, $resource)
         {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs();
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
-            $data = array(
+            $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_fields();
+
+            return json_encode(array(
                 'apiKey' => $configs['apiKey'],
-                'order_id' => /* Num sei ainda */
-                'payer_email' => /* Não tem esse campo no forms de pedido */
-                'payer_name' => /* Num sei ainda */ 
-                'payer_cpf_cnpj' => /* Num sei ainda */
-                'payer_phone' => /* Num sei ainda */
-                'notification_url' => /* Num sei ainda */
-                'discount_cents' => /* Num sei ainda */
-                'shipping_price_cents' => /* Num sei ainda */
-                'shipping_methods' => /* Num sei ainda */
-                'number_ntfiscal' => /* Num sei ainda */
-                'fixed_description' => /* Num sei ainda */
+                'order_id' => $configs['orderId'],
+                'payer_email' => $fields['payerEmail'],
+                'payer_name' => $fields['payerName'],
+                'payer_cpf_cnpj' => $fields['payerCpf'],
+                'payer_phone' => $fields['payerPhone'],
                 'days_due_date' => $configs['daysDueDate'],
                 'items' => array(
-                    array ('description' => 'piscina de bolinha',
-                    'quantity' => '1',
-              'item_id' => '1',
-              'price_cents' => '1012'), // em centavos
-              array ('description' => 'pula pula',
-              'quantity' => '2',
-              'item_id' => '1',
-              'price_cents' => '2000'), // em centavos
-              array ('description' => 'mala de viagem',
-              'quantity' => '3',
-              'item_id' => '1',
-              'price_cents' => '4000'), // em centavos
-              ),
-              );
-
-            return $data;
+                    array(
+                        // TODO ver como pegar essas informações.
+                        'description' => $configs['itemDescription'],
+                        'quantity' => '1',
+                        'item_id' => $configs['itemId'],
+                        'price_cents' => $configs['itemPriceCents'],
+                    ),
+                ),
+            ));
         }
 
         /**
@@ -101,9 +90,16 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         protected function set_request_headers($headers, $resource, $method)
         {
-            $headers['X-API-KEY'] = llms_sample_gateway()->get_gateway()->get_api_key();
+            $mediaType = 'application/json'; // formato da requisição
+            $charSet = 'UTF-8';
 
-            return parent::set_request_headers( $headers, $resource, $method );
+            $headers = array();
+            $headers[] = 'Accept: ' . $mediaType;
+            $headers[] = 'Accept-Charset: ' . $charSet;
+            $headers[] = 'Accept-Encoding: ' . $mediaType;
+            $headers[] = 'Content-Type: ' . $mediaType . ';charset=' . $charSet;
+
+            return $headers;
         }
 
         /**
@@ -118,7 +114,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         protected function set_request_url($resource, $method)
         {
-            return rest_url( sprintf( 'sg-mock/v1%s', $resource ) );
+            return 'https://pix.paghiper.com/invoice/create/';
+            // return rest_url( sprintf( 'https://pix.paghiper.com/invoice/create/' ) );
         }
     }
 }

@@ -139,11 +139,27 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
     {
         $configs = array();
 
-        $configs['paymentInstruction'] = give_get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id));
-        $configs['apiKey'] = give_get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
+        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id));
+        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
         $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
         $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
 
+        global $wp;
+        $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
+        $configs['orderId'] = $order->get('id');
+
         return $configs;
+    }
+
+    final public static function get_fields()
+    {
+        $fields = array();
+
+        $fields['payerName'] = get_option('first_name') . ' ' . get_option('last_name');
+        $fields['payerEmail'] = LLMS()->session->get('checkout_email');
+        $fields['payerPhone'] = get_option('llms_phone');
+        $fields['payerCpf'] = get_option('lkn_pix_cpf');
+
+        return $fields;
     }
 }
