@@ -144,10 +144,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
         $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
         $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
 
-        global $wp;
-        $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
-        $configs['orderId'] = $order->get('id');
-
         return $configs;
     }
 

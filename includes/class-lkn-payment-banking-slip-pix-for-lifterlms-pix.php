@@ -185,15 +185,15 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
             // Validate min value.
             $total = $order->get_price( 'total', array(), 'float' );
-            $currency = $order->get( 'currency' );
 
             if ( $total < 3.00 ) {
                 $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
-                // Translators: %1$s = currency code; %2$s = price.
-                return llms_add_notice( sprintf( _x( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'lifterlms-sample-gateway' ) ), 'error' );
+
+                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'lifterlms-sample-gateway' ) ), 'error' );
             }
 
             // TODO caso nenhuma outra verificação, fazer a requisição para a API.
+            $this->process_order($order);
 
             // // Free orders (no payment is due).
             // if ( (float) 0 === $order->get_initial_price( array(), 'float' ) ) {
@@ -242,6 +242,98 @@ if (class_exists('LLMS_Payment_Gateway')) {
             // do_action( 'lifterlms_handle_pending_order_complete', $order );
 
             // llms_redirect_and_exit( $order->get_view_link() );
+        }
+
+        /**
+         * Process the order.
+         *
+         * @since 1.0.0
+         *
+         * @param LLMS_Order $order order object
+         */
+        public function process_order($order)
+        {
+            $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_fields();
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+
+            $order_id = llms_get_order_by_key('', 'id');
+            $total = $order->get_price( 'total', array(), 'float' );
+
+            // Payer parameters
+            $payerEmail = $fields['payerEmail'];
+            $payerName = $fields['payerName'];
+            $payerCpf = $this->get_field_data()['cpf'];
+            $payerPhone = $fields['payerPhone'];
+
+            // POST parameters
+            $url = 'https://pix.paghiper.com/invoice/create/'; // TODO Não fazer muitas requisições.
+            $apiKey = $configs['apiKey'];
+            $orderId = $order_id;
+            $daysToDue = $configs['daysDueDate'];
+            $itemQtd = '1';
+            $itemDesc = ''; // TODO arrumar
+            $itemId = ''; // TODO arrumar
+            $itemPriceCents = $total * 100;
+            $mediaType = 'application/json';
+            $charSet = 'UTF-8';
+
+            // Body e Header
+            $dataBody = json_encode(array(
+                'apiKey' => $apiKey,
+                'order_id' => $orderId,
+                'payer_email' => $payerEmail,
+                'payer_name' => $payerName,
+                'payer_cpf' => $payerCpf,
+                'payer_phone' => $payerPhone,
+                'days_due_date' => $daysToDue,
+                'items' => array(
+                    array(
+                        'description' => $itemDesc,
+                        'quantity' => $itemQtd,
+                        'item_id' => $itemId,
+                        'price_cents' => $itemPriceCents,
+                    ),
+                ),
+            ));
+
+            $dataHeader = array(
+                'Accept: ' . $mediaType,
+                'Accept-Charset: ' . $charSet,
+                'Accept-Encoding: ' . $mediaType,
+                'Content-Type: ' . $mediaType . ';charset=' . $charSet,
+            );
+
+            // $ch = curl_init();
+            // curl_setopt($ch, \CURLOPT_URL, $url);
+            // curl_setopt($ch, \CURLOPT_POST, 1);
+            // curl_setopt($ch, \CURLOPT_POSTFIELDS, $dataBody);
+            // curl_setopt($ch, \CURLOPT_HTTPHEADER, $dataHeader);
+            // curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, false);
+            // $result = curl_exec($ch);
+
+            // echo 'Teste | ' . $result;
+
+            // return json_decode($result, true);
+            echo $dataBody;
+
+            return true;
+
+            // TODO capturar response e salvar log, disparar erro, etc.
+
+            // $code = wp_remote_retrieve_response_code( $response );
+            // $body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+            // // API Responded with an error.
+            // if ( $code > 201 ) {
+            //     return $this->set_error(
+            //         ! empty( $body['message'] ) ? $body['message'] : __( 'Unknown Error', 'payment-banking-slip-pix-for-lifterlms' ),
+            //         ! empty( $body['code'] ) ? $body['code'] : 'unknown-error',
+            //         $response
+            //     );
+            // }
+
+            // return $this->set_result( $body );
         }
 
         /**
@@ -313,7 +405,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
             // Retrieve all checkout fields.
             foreach ( array('cpf') as $field ) {
-                $data[ $field ] = llms_filter_input( \INPUT_POST, 'lkn_pix_' . $field, \FILTER_SANITIZE_STRING );
+                $data[ $field ] = llms_filter_input( \INPUT_POST, 'lkn_pix_' . $field);
 
                 // In our example, all fields are required.
                 if ( empty( $data[ $field ] ) ) {

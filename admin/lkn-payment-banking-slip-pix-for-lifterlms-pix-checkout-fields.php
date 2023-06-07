@@ -16,7 +16,7 @@ llms_form_field(
         'id' => 'lkn_pix_cpf',
         'label' => __( 'CPF', 'payment-banking-slip-pix-for-lifterlms' ),
         'last_column' => false,
-        'max_length' => 14,
+        'max_length' => 11,
         'placeholder' => 'XXX.XXX.XXX-XX',
         'required' => true,
         'type' => 'text',
