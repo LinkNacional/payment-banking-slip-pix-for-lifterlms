@@ -81,8 +81,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
             return $default_fields;
         }
 
-        // TODO "Certo" só daqui para cima.
-
         // /**
         //  * Get fields displayed on the checkout form.
         //  *
@@ -192,45 +190,44 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'lifterlms-sample-gateway' ) ), 'error' );
             }
 
-            // TODO caso nenhuma outra verificação, fazer a requisição para a API.
+            // Free orders (no payment is due).
+            if ( (float) 0 === $order->get_initial_price( array(), 'float' ) ) {
+                // Free access plans do not generate receipts.
+                if ( $plan->is_free() ) {
+                    $order->set( 'status', 'llms-completed' );
+
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
+                } else {
+                    // Record a $0.00 transaction to ensure a receipt is sent.
+                    $order->record_transaction(
+                        array(
+                            'amount' => (float) 0,
+                            'source_description' => __( 'Free', 'lifterlms' ),
+                            'transaction_id' => uniqid(),
+                            'status' => 'llms-txn-succeeded',
+                            'payment_gateway' => 'pix',
+                            'payment_type' => 'single',
+                        )
+                    );
+                }
+
+                return $this->complete_transaction( $order );
+            }
+
             $this->process_order($order);
 
-            // // Free orders (no payment is due).
-            // if ( (float) 0 === $order->get_initial_price( array(), 'float' ) ) {
-            //     // Free access plans do not generate receipts.
-            //     if ( $plan->is_free() ) {
-            //         $order->set( 'status', 'llms-completed' );
-
-            //         // Free trial, reduced to free via coupon, etc....
-            //         // We do want to record a transaction and then generate a receipt.
-            //     } else {
-            //         // Record a $0.00 transaction to ensure a receipt is sent.
-            //         $order->record_transaction(
-            //             array(
-            //                 'amount' => (float) 0,
-            //                 'source_description' => __( 'Free', 'lifterlms' ),
-            //                 'transaction_id' => uniqid(),
-            //                 'status' => 'llms-txn-succeeded',
-            //                 'payment_gateway' => 'pix',
-            //                 'payment_type' => 'single',
-            //             )
-            //         );
-            //     }
-
-            //     return $this->complete_transaction( $order );
-            // }
-
-            // /*
-            //  * Action triggered when a pix payment is due.
-            //  *
-            //  * @hooked LLMS_Notification: manual_payment_due - 10
-            //  *
-            //  * @since Unknown.
-            //  *
-            //  * @param LLMS_Order                  $order   The order object.
-            //  * @param LLMS_Payment_Gateway_Manual $gateway Manual gateway instance.
-            //  */
-            // do_action( 'llms_manual_payment_due', $order, $this );
+            /*
+             * Action triggered when a pix payment is due.
+             *
+             * @hooked LLMS_Notification: manual_payment_due - 10
+             *
+             * @since Unknown.
+             *
+             * @param LLMS_Order                  $order   The order object.
+             * @param LLMS_Payment_Gateway_Manual $gateway Manual gateway instance.
+             */
+            do_action( 'llms_manual_payment_due', $order, $this );
 
             // /*
             //  * Action triggered when the pending order processing has been completed.
@@ -253,27 +250,25 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         public function process_order($order)
         {
-            $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_fields();
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
-            $order_id = llms_get_order_by_key('', 'id');
             $total = $order->get_price( 'total', array(), 'float' );
 
             // Payer parameters
-            $payerEmail = $fields['payerEmail'];
-            $payerName = $fields['payerName'];
-            $payerCpf = $this->get_field_data()['cpf'];
-            $payerPhone = $fields['payerPhone'];
+            $payerEmail = $order->billing_email;
+            $payerName = $order->get_customer_name();
+            $payerCpf = $this->get_field_data()['lkn_cpf_cnpj_input_paghiper'];
+            $payerPhone = $order->billing_phone;
 
             // POST parameters
-            $url = 'https://pix.paghiper.com/invoice/create/'; // TODO Não fazer muitas requisições.
+            $url = 'https://pix.paghiper.com/invoice/create/';
             $apiKey = $configs['apiKey'];
-            $orderId = $order_id;
+            $orderId = $order->get( 'id' );
             $daysToDue = $configs['daysDueDate'];
             $itemQtd = '1';
-            $itemDesc = ''; // TODO arrumar
-            $itemId = ''; // TODO arrumar
-            $itemPriceCents = $total * 100;
+            $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')';
+            $itemId = $order->product_id;
+            $itemPriceCents = number_format($total * 100, 2);
             $mediaType = 'application/json';
             $charSet = 'UTF-8';
 
@@ -303,6 +298,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'Content-Type: ' . $mediaType . ';charset=' . $charSet,
             );
 
+            // TODO descomentar só depois para não fazer requisições sem necessidade.
             // $ch = curl_init();
             // curl_setopt($ch, \CURLOPT_URL, $url);
             // curl_setopt($ch, \CURLOPT_POST, 1);
@@ -315,7 +311,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
             // echo 'Teste | ' . $result;
 
             // return json_decode($result, true);
-            echo $dataBody;
+
+            echo $dataBody . ' |----| ' . json_encode($dataHeader);
 
             return true;
 
@@ -404,8 +401,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $data = array();
 
             // Retrieve all checkout fields.
-            foreach ( array('cpf') as $field ) {
-                $data[ $field ] = llms_filter_input( \INPUT_POST, 'lkn_pix_' . $field);
+            foreach ( array('lkn_cpf_cnpj_input_paghiper') as $field ) {
+                $data[ $field ] = llms_filter_input( \INPUT_POST, $field);
 
                 // In our example, all fields are required.
                 if ( empty( $data[ $field ] ) ) {

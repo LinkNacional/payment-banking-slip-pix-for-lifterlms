@@ -13,12 +13,17 @@ llms_form_field(
     array(
         'columns' => 7,
         'disabled' => $selected ? false : true,
-        'id' => 'lkn_pix_cpf',
-        'label' => __( 'CPF', 'payment-banking-slip-pix-for-lifterlms' ),
+        'id' => 'lkn_cpf_cnpj_input_paghiper',
+        'label' => __( 'CPF / CNPJ', 'payment-banking-slip-pix-for-lifterlms' ),
         'last_column' => false,
-        'max_length' => 11,
-        'placeholder' => 'XXX.XXX.XXX-XX',
+        'placeholder' => 'CPF / CNPJ',
         'required' => true,
-        'type' => 'text',
+        'type' => 'tel',
+        'autocomplete' => 'off',
+        'class' => 'lifterLMS-input required',
+        'aria-required' => true,
+        'onfocus' => 'javascript: retirarFormatacao(this);',
+        'onblur' => 'javascript: formatarCampo(this);',
+        'max_length' => 19,
     )
 );
