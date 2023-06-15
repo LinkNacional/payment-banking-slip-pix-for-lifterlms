@@ -192,7 +192,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 return $this->complete_transaction( $order );
             }
 
-            $this->process_order($order);
+            $this->paghiper_process_order($order);
 
             /*
              * Action triggered when a pix payment is due.
@@ -216,9 +216,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
             do_action( 'lifterlms_handle_pending_order_complete', $order );
 
             llms_redirect_and_exit( $order->get_view_link() );
-
-            // TODO Próximo passo: Processo de pagamento do boleto.
-            // TODO Ao ser alterado para Paid no PagHiper: Dar como Paid no LifterLMS. Possível ideia: $order->set('status', 'paid'), será ?
         }
 
         /**
@@ -228,7 +225,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @param LLMS_Order $order order object
          */
-        public function process_order($order) {
+        public function paghiper_process_order($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             $total = $order->get_price( 'total', array(), 'float' );
@@ -297,7 +294,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
             // echo '| HTTPCODE | ' . $httpCode;
 
-            // echo ' | BODY| ' . $dataBody . ' | DATA | ' . json_encode($dataHeader);
+            // echo ' | BODY | ' . $dataBody . ' | DATA | ' . json_encode($dataHeader);
 
             // Log request error
             if ( $httpCode > 201 ) {
@@ -321,20 +318,43 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since 1.0.0
          *
          * @param WP_REST_Request $request request object
+         * @param mixed           $int
          *
          * @return WP_REST_Response
          */
-        public static function get_pix_notification($request) {
-            $response = array(
-                'status' => 'sucesso',
-                'message' => 'Rota acessada com sucesso.',
-                'data' => array(
-                    'body' => $request->get_body(),
-                ),
+        public static function get_pix_notification() {
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+
+            // Parameters
+            $token = $configs['tokenKey'];
+            $apiKey = sanitize_text_field($_POST['apiKey']);
+            $transactionId = sanitize_text_field($_POST['transaction_id']);
+            $notificationId = sanitize_text_field($_POST['notification_id']);
+
+            // Header parameters
+            $mediaType = 'application/json';
+            $charSet = 'UTF-8';
+
+            $body = array(
+                'token' => $token,
+                'apiKey' => $apiKey,
+                'transaction_id' => $transactionId,
+                'notification_id' => $notificationId,
             );
 
-            return rest_ensure_response( $response );
+            $header = array(
+                'Accept: ' . $mediaType,
+                'Accept-Charset: ' . $charSet,
+                'Accept-Encoding: ' . $mediaType,
+                'Content-Type: ' . $mediaType . ';charset=' . $charSet,
+            );
+
+            // TODO aqui refaria a requisição. TODO: Criar uma função que faça o processo da requisição, para não ficar repetindo.
+            return rest_ensure_response( $body );
         }
+
+        // TODO Próximo passo: Processo de pagamento do boleto.
+        // TODO Ao ser alterado para Paid no PagHiper: Dar como Paid no LifterLMS. Possível ideia: $order->set('status', 'paid'), será ?
 
         /**
          * Called by scheduled actions to charge an order for a scheduled recurring transaction
