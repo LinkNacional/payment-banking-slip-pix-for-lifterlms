@@ -135,6 +135,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
         $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
         $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+        $configs['urlPix'] = 'https://pix.paghiper.com/';
         // TODO adicionar minutesDueDate numa possível versão Pro.
 
         return $configs;

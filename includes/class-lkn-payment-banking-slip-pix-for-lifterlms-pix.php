@@ -237,7 +237,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $payerPhone = $order->billing_phone;
 
             // POST parameters
-            $url = 'https://pix.paghiper.com/invoice/create/';
+            $url = $configs['urlPix'];
             $apiKey = $configs['apiKey'];
             $orderId = $order->get( 'id' );
             $daysToDue = $configs['daysDueDate'];
@@ -277,18 +277,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'Content-Type: ' . $mediaType . ';charset=' . $charSet,
             );
 
-            $ch = curl_init();
-            curl_setopt($ch, \CURLOPT_URL, $url);
-            curl_setopt($ch, \CURLOPT_POST, 1);
-            curl_setopt($ch, \CURLOPT_POSTFIELDS, $dataBody);
-            curl_setopt($ch, \CURLOPT_HTTPHEADER, $dataHeader);
-            curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, false);
-            $request = curl_exec($ch);
+            // Faz a requisição
+            $requestResponse = $this->lkn_paghiper_pix_request($dataBody, $dataHeader, $url . 'invoice/create');
 
-            $json = json_decode($request, true);
+            $json = json_decode($requestResponse['request'], true);
 
-            $httpCode = curl_getinfo($ch, \CURLINFO_HTTP_CODE);
+            $httpCode = $requestResponse['httpCode'];
 
             // echo '| REQUEST | ' . $request;
 
@@ -313,16 +307,43 @@ if (class_exists('LLMS_Payment_Gateway')) {
         }
 
         /**
+         * PagHiper Pix Request.
+         *
+         * @since 1.0.0
+         *
+         * @param mixed $dataBody
+         * @param mixed $dataHeader
+         * @param mixed $url
+         *
+         * @return array
+         */
+        public function lkn_paghiper_pix_request($dataBody, $dataHeader, $url) {
+            $requestResponse = array();
+
+            $ch = curl_init();
+            curl_setopt($ch, \CURLOPT_URL, $url);
+            curl_setopt($ch, \CURLOPT_POST, 1);
+            curl_setopt($ch, \CURLOPT_POSTFIELDS, $dataBody);
+            curl_setopt($ch, \CURLOPT_HTTPHEADER, $dataHeader);
+            curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, false);
+
+            $requestResponse['request'] = curl_exec($ch);
+            $requestResponse['httpCode'] = curl_getinfo($ch, \CURLINFO_HTTP_CODE);
+
+            return $requestResponse;
+        }
+
+        /**
          * Pix status Listener.
          *
          * @since 1.0.0
          *
-         * @param WP_REST_Request $request request object
-         * @param mixed           $int
+         * @param LLMS_Order $order order object
          *
          * @return WP_REST_Response
          */
-        public static function get_pix_notification() {
+        public static function get_pix_notification($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             // Parameters
@@ -343,18 +364,59 @@ if (class_exists('LLMS_Payment_Gateway')) {
             );
 
             $header = array(
+                // 'Accept-Charset: ' . $charSet,
+                // 'Accept-Encoding: ' . $mediaType,
                 'Accept: ' . $mediaType,
-                'Accept-Charset: ' . $charSet,
-                'Accept-Encoding: ' . $mediaType,
                 'Content-Type: ' . $mediaType . ';charset=' . $charSet,
             );
 
-            // TODO aqui refaria a requisição. TODO: Criar uma função que faça o processo da requisição, para não ficar repetindo.
-            return rest_ensure_response( $body );
+            // echo json_encode($body) . ' | ' . json_encode($header);
+            // $requestResponse = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::lkn_paghiper_pix_request($body, $header, $configs['urlPix'] . 'invoice/notification/');
+
+            // $code = json_decode($requestResponse['request'])->status_request->http_code;
+            // $orderId = json_decode($requestResponse['request'])->status_request->order_id;
+            // $orderStatus = json_decode($requestResponse['request'])->status_request->status;
+
+            $orderId = sanitize_text_field($_POST['order_id']);
+            $orderStatus = sanitize_text_field($_POST['order_status']);
+
+            // TODO registrar log.
+
+            // Verificar se está pago ou completo
+            if ('completed' == $orderStatus || 'paid' == $orderStatus) {
+                // Se for plano de pagamentos recorrentes, ativa o pedido
+                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::lkn_order_set_status($order, $orderId, 'completed');
+            } elseif ('canceled' == $orderStatus || 'refunded' == $orderStatus) {
+                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::lkn_order_set_status($order, $orderId, 'canceled');
+            } else {
+                return false;
+            }
+
+            return rest_ensure_response($body);
         }
 
-        // TODO Próximo passo: Processo de pagamento do boleto.
-        // TODO Ao ser alterado para Paid no PagHiper: Dar como Paid no LifterLMS. Possível ideia: $order->set('status', 'paid'), será ?
+        // Função para definir paid, completed, failed
+        /**
+         * Set the order status.
+         *
+         * @since 1.0.0
+         *
+         * @param LLMS_Order $order   order object
+         * @param mixed      $orderId
+         * @param mixed      $status
+         */
+        // TODO não funcionou
+        public static function lkn_order_set_status($order, $orderId, $status) {
+            if ($order->get('id') == $orderId) {
+                if ('completed' == $status || 'paid' == $status) {
+                    $order->set( 'status', 'llms-completed' );
+                } elseif ('canceled' == $status || 'refunded' == $status) {
+                    $order->set( 'status', 'llms-failed' );
+                } else {
+                    return false;
+                }
+            }
+        }
 
         /**
          * Called by scheduled actions to charge an order for a scheduled recurring transaction
