@@ -1,41 +1,56 @@
-// TODO fazer funcionar.
-// (function ($) {
-//   'use strict'
+(function ($) {
+  'use strict'
 
-//   $(window).load(function () {
-//     const cpfCnpjInput = $('#lkn_cpf_cnpj_input_paghiper')[0]
+  $(document).ready(function () {
+    $('#lkn_copy_code').click(function () {
+      const codigoEmv = $('#lkn_emvcode').val()
 
-//     $(cpfCnpjInput).on('click', function () {
-//       formatarCampo(cpfCnpjInput)
-//       retirarFormatacao(cpfCnpjInput)
+      navigator.clipboard.writeText(codigoEmv)
+        .then(function () {
+          // TODO retirar alert, usar mensagem HTML ou tooltip.
+          alert('Código copiado!')
+        })
+        .catch(function (error) {
+          alert('Falha ao copiar código: ', error)
+        })
+    })
+  })
 
-//       console.log(cpfCnpjInput.value)
-//     })
-//   })
+  // TODO arrumar mascara CPF depois.
+  //   $(window).load(function () {
+  //     const cpfCnpjInput = $('#lkn_cpf_cnpj_input_paghiper')[0]
 
-//   function retirarFormatacao (campoTexto) {
-//     campoTexto.value = campoTexto.value.replace('/(\\.|\\/|\\-)/g', '')
-//   }
+  //     $(cpfCnpjInput).on('click', function () {
+  //       formatarCampo(cpfCnpjInput)
+  //       retirarFormatacao(cpfCnpjInput)
 
-//   // faz a formatação do campo CPF/CNPJ
-//   function formatarCampo (campoTexto) {
-//     if (campoTexto.value.length <= 11) {
-//       campoTexto.value = mascaraCpf(campoTexto.value)
-//     } else {
-//       campoTexto.value = mascaraCnpj(campoTexto.value)
-//     }
-//   }
+  //       console.log(cpfCnpjInput.value)
+  //     })
+  //   })
 
-//   // insere uma máscara de acordo com a quantidade de caracteres
-//   function mascaraCpf (valor) {
-//     // eslint-disable-next-line no-useless-escape
-//     return valor.replace('/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/g', '\$1.\$2.\$3\\-\$4')
-//   }
+  //   function retirarFormatacao (campoTexto) {
+  //     campoTexto.value = campoTexto.value.replace('/(\\.|\\/|\\-)/g', '')
+  //   }
 
-//   function mascaraCnpj (valor) {
-//     // eslint-disable-next-line no-useless-escape
-//     return valor.replace('/(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/g', '\$1.\$2.\$3\\/\$4\\-\$5')
-//   }
+  //   // faz a formatação do campo CPF/CNPJ
+  //   function formatarCampo (campoTexto) {
+  //     if (campoTexto.value.length <= 11) {
+  //       campoTexto.value = mascaraCpf(campoTexto.value)
+  //     } else {
+  //       campoTexto.value = mascaraCnpj(campoTexto.value)
+  //     }
+  //   }
 
-// // eslint-disable-next-line no-undef
-// })(jQuery)
+  //   // insere uma máscara de acordo com a quantidade de caracteres
+  //   function mascaraCpf (valor) {
+  //     // eslint-disable-next-line no-useless-escape
+  //     return valor.replace('/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/g', '\$1.\$2.\$3\\-\$4')
+  //   }
+
+  //   function mascaraCnpj (valor) {
+  //     // eslint-disable-next-line no-useless-escape
+  //     return valor.replace('/(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/g', '\$1.\$2.\$3\\/\$4\\-\$5')
+  //   }
+
+// eslint-disable-next-line no-undef
+})(jQuery)

@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
+final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public
+{
     /**
      * The ID of this plugin.
      *
@@ -42,7 +43,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
     }
@@ -52,7 +54,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -65,7 +68,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
          * class.
          */
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lkn-payment-banking-slip-pix-for-lifterlms-public.css', array(), $this->version, 'all' );
+        wp_enqueue_style( 'lkn-payment-banking-slip-pix-for-lifterlms', plugin_dir_url( __FILE__ ) . 'css/lkn-payment-banking-slip-pix-for-lifterlms-public.css', array(), $this->version, 'all' );
     }
 
     /**
@@ -73,7 +76,8 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -86,6 +90,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-public.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( 'lkn-payment-banking-slip-pix-for-lifterlms', plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-public.js', array('jquery'), $this->version, false );
     }
 }
