@@ -2,16 +2,24 @@
   'use strict'
 
   $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+
     $('#lkn_copy_code').click(function () {
       const codigoEmv = $('#lkn_emvcode').val()
+      const buttonTitle = $('#lkn_copy_code')
 
       navigator.clipboard.writeText(codigoEmv)
         .then(function () {
-          // TODO retirar alert, usar mensagem HTML ou tooltip.
-          alert('Código copiado!')
+          buttonTitle.tooltip('dispose')
+          buttonTitle.tooltip({
+            title: 'Código copiado'
+          }).tooltip('show')
         })
         .catch(function (error) {
-          alert('Falha ao copiar código: ', error)
+          buttonTitle.tooltip('dispose')
+          buttonTitle.tooltip({
+            title: 'Falha ao copiar código: ', error
+          }).tooltip('show')
         })
     })
   })

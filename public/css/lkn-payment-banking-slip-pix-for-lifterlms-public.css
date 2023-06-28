@@ -30,9 +30,11 @@
 }
 
 #lkn_copy_code {
-    margin-top: 5%;
-    width: 35%;
-    height: 14%;
+    margin-top: 12%;
+    width: auto;
+    min-width: 35%;
+    min-height: 14%;
+    height: auto;
     background: #e1e1e1;
     color: #414141;
     border: none;
@@ -40,4 +42,23 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 700;
+}
+
+.tooltip {
+    color: #2c2c2c;
+    background: rgb(130, 209, 255);
+    bottom: 100%;
+    border-radius: 6px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    bottom: -55%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: rgb(130, 209, 255) transparent transparent transparent;
 }

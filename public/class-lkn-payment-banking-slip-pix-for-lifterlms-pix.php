@@ -58,6 +58,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             add_filter( 'llms_get_gateway_settings_fields', array($this, 'pix_settings_fields'), 10, 2 );
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts'));
         }
 
         /**
@@ -110,6 +111,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
             }
         }
 
+        public function enqueue_tooltip_scripts(): void
+        {
+            wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
+            wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
+        }
+
         public function after_view_order_table(): void
         {
             // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
@@ -127,8 +134,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
             $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
 
-            // TODO colocar prefixo lkn_ aqui e no css/js
-
             $paymentArea = <<<HTML
             <h2>{$title}</h2> 
             <div class="lkn_payment_area">
@@ -137,7 +142,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 </div>
                 <div class="lkn_emvcode_div"> 
                 <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
-                <button id="lkn_copy_code">{$buttonTitle}</button>
+                <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
                 </div>
             </div>
             
@@ -293,11 +298,13 @@ HTML;
             $payerCpfCnpj = $this->get_field_data()['lkn_cpf_cnpj_input_paghiper'];
             $payerPhone = $order->billing_phone;
 
+            // TODO ver valores padrões
+
             // POST parameters
             $url = $configs['urlPix'];
             $apiKey = $configs['apiKey'];
             $orderId = $order->get( 'id' );
-            $daysToDue = $configs['daysDueDate'];
+            $daysToDue = $configs['daysDueDate'] ?? '1';
             $notificationUrl = site_url() . '/wp-json/lkn-paghiper-pix-listener/v1/notification';
             $itemQtd = '1';
             $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')';
@@ -375,24 +382,18 @@ HTML;
          */
         public function lkn_paghiper_pix_request($dataBody, $dataHeader, $url)
         {
-            // TODO ver função para fazer POST do próprio wordpress.
+            $args = array(
+                'headers' => $dataHeader,
+                'body' => $dataBody,
+                'timeout' => '15',
+                'redirection' => '5',
+                'httpversion' => '1.0',
+            );
 
-            // USAR wp_remote_post()
+            $request = wp_remote_post($url, $args);
+            // TODO usar try catch para salvar logs.
 
-            $requestResponse = array();
-
-            $ch = curl_init();
-            curl_setopt($ch, \CURLOPT_URL, $url);
-            curl_setopt($ch, \CURLOPT_POST, 1);
-            curl_setopt($ch, \CURLOPT_POSTFIELDS, $dataBody);
-            curl_setopt($ch, \CURLOPT_HTTPHEADER, $dataHeader);
-            curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, false);
-
-            $requestResponse['request'] = curl_exec($ch);
-            $requestResponse['httpCode'] = curl_getinfo($ch, \CURLINFO_HTTP_CODE);
-
-            return $requestResponse;
+            return wp_remote_retrieve_body($request);
         }
 
         /**
@@ -406,9 +407,13 @@ HTML;
          */
         public static function get_pix_notification($request)
         {
-            if (isset($request['transaction_id'])) {
-                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
+            if ('yes' === $configs['logEnabled']) {
+                error_log(date('d M Y H:i:s') . ' pix listener POST: ' . var_export($request, true) . \PHP_EOL, 3, $configs['baseLog'] );
+            }
+
+            if (isset($request['transaction_id'])) {
                 // Body parameters
                 $token = $configs['tokenKey'];
                 $apiKey = sanitize_text_field($request['apiKey']);
@@ -433,10 +438,20 @@ HTML;
                     'Content-Type: ' . $mediaType . ';charset=' . $charSet,
                 );
 
-                $requestResponse = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::lkn_paghiper_pix_request($body, $header, $configs['urlPix'] . 'invoice/notification/');
+                $args = array(
+                    'headers' => $header,
+                    'body' => $body,
+                    'timeout' => '15',
+                    'redirection' => '5',
+                    'httpversion' => '1.0',
+                );
+
+                $request = wp_remote_post($configs['urlPix'] . 'invoice/notification/', $args);
+                // TODO usar try catch para salvar logs.
+
+                $requestResponse = wp_remote_retrieve_body($request);
             }
 
-            // $code = json_decode($requestResponse['request'])->status_request->http_code;
             $orderId = json_decode($requestResponse['request'])->status_request->order_id;
             $orderStatus = json_decode($requestResponse['request'])->status_request->status;
 
@@ -444,8 +459,7 @@ HTML;
             $orderObj = llms_get_order_by_key('#' . $orderId);
 
             // TODO registrar log.
-            // Ver o $this->log
-            // Ver como salvar os logs, exibir logs, ativar e desativar registro de logs.
+            // TODO Ver como exibir logs
             // TODO ver botão enable perdido.
 
             // Altera o status do pedido no lifterLMS de acordo com o status recebido pelo PagHiper.
