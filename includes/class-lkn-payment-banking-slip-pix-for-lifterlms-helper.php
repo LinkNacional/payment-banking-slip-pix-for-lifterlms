@@ -6,15 +6,13 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
-{
+final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
      *
      * @since
      */
-    final public static function get_llms_version()
-    {
+    final public static function get_llms_version() {
         $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
         $plugin_data = get_plugin_data($pluginPath);
 
@@ -28,8 +26,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
      *
      * @since
      */
-    final public static function verify_plugin_dependencies(): void
-    {
+    final public static function verify_plugin_dependencies(): void {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -86,8 +83,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
      *
      * @since
      */
-    final public static function dependency_notice(): void
-    {
+    final public static function dependency_notice(): void {
         $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
 
         // Admin notice.
@@ -110,8 +106,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
      *
      * @since
      */
-    final public static function inactive_notice(): void
-    {
+    final public static function inactive_notice(): void {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
@@ -125,26 +120,23 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
         echo $message;
     }
 
-    final public static function dependency_alert(): void
-    {
+    final public static function dependency_alert(): void {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'dependency_notice'));
     }
 
-    final public static function inactive_alert(): void
-    {
+    final public static function inactive_alert(): void {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
     }
 
-    final public static function get_configs($gateway_id)
-    {
+    final public static function get_configs($gateway_id) {
         $configs = array();
 
-        $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id));
+        $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
         $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . date('d.m.Y-H.i.s') . '.log';
-        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id));
+        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
         $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
         $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
-        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id), '1');
         $configs['urlPix'] = 'https://pix.paghiper.com/';
         // TODO adicionar minutesDueDate numa possível versão Pro.
 
@@ -158,8 +150,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
      *
      * @return string $page_url
      */
-    final public static function get_current_url()
-    {
+    final public static function get_current_url() {
         $page_url = 'http';
         if ('on' === $_SERVER['HTTPS']) {
             $page_url .= 's';
@@ -183,8 +174,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper
      *
      * @return int $number
      */
-    final public static function get_number_in_url($url)
-    {
+    final public static function get_number_in_url($url) {
         $number = preg_match('/\/(\d+)\//', $url, $matches);
         if (isset($matches[1])) {
             $number = $matches[1];
