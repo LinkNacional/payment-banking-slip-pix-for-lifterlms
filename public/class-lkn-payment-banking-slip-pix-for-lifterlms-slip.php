@@ -1,6 +1,6 @@
 <?php
 /**
- * Pix Payment Gateway Class.
+ * Bank Slip Payment Gateway Class.
  *
  * @since 1.0.0
  *
@@ -9,12 +9,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /*
- * Pix Payment Gateway Class.
+ * Bank Slip Payment Gateway Class.
  *
  * @since 1.0.0
  */
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix extends LLMS_Payment_Gateway {
+    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip extends LLMS_Payment_Gateway {
         /**
          * A description of the payment proccess.
          *
@@ -52,7 +52,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
         public function __construct() {
             $this->set_variables();
 
-            add_filter( 'llms_get_gateway_settings_fields', array($this, 'pix_settings_fields'), 10, 2 );
+            add_filter( 'llms_get_gateway_settings_fields', array($this, 'slip_settings_fields'), 10, 2 );
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
@@ -73,11 +73,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @return array
          */
-        public function pix_settings_fields($default_fields, $gateway_id) {
+        public function slip_settings_fields($default_fields, $gateway_id) {
             if ( $this->id === $gateway_id ) {
-                require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
+                require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-slip-settings.php';
 
-                $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings::set_settings();
+                $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip_Settings::set_settings();
 
                 $default_fields = array_merge( $default_fields, $fields );
             }
@@ -86,12 +86,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
         }
 
         /**
-         * Output payment instructions if the order is pending.
+         * Output payment instructions if the order is pending | on-hold.
          *
          * @since 1.0.0
          */
         public function before_view_order_table(): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $paymentInstruction = $configs['paymentInstruction'];
             $payInstTitle = esc_html__( 'Payment Instructions', 'payment-banking-slip-pix-for-lifterlms' );
@@ -119,49 +119,50 @@ HTML;
             }
         }
 
-        public function after_view_order_table(): void {
-            // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
-            $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
-            $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
+//         // TODO adaptação completa ao modelo de boleto
+//         public function after_view_order_table(): void {
+//             // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
+//             $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
+//             $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
 
-            // Obtendo o obj $order a partir da key
-            $objOrder = llms_get_order_by_key('#' . $orderId);
+//             // Obtendo o obj $order a partir da key
+//             $objOrder = llms_get_order_by_key('#' . $orderId);
 
-            // Obtendo qrCode e emvCode
-            $urlQrCode = $objOrder->pix_qrcode_image;
-            $emvCode = $objOrder->pix_emv_code;
-            $transactionId = $objOrder->pix_transaction_id;
+//             // Obtendo qrCode e emvCode
+//             $urlQrCode = $objOrder->pix_qrcode_image;
+//             $emvCode = $objOrder->pix_emv_code;
+//             $transactionId = $objOrder->pix_transaction_id;
 
-            $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
-            $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
+//             $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
+//             $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
 
-            $paymentArea = <<<HTML
-            <h2>{$title}</h2> 
-            <div class="lkn_payment_area">
-                <div class="lkn_qrcode_div"> 
-                <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
-                </div>
-                <div class="lkn_emvcode_div"> 
-                <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
-                <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
-                </div>
-            </div>
-            
-HTML;
+//             $paymentArea = <<<HTML
+//             <h2>{$title}</h2>
+//             <div class="lkn_payment_area">
+//                 <div class="lkn_qrcode_div">
+//                 <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
+//                 </div>
+//                 <div class="lkn_emvcode_div">
+//                 <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
+//                 <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
+//                 </div>
+//             </div>
 
-            global $wp;
+// HTML;
 
-            if ( ! empty( $wp->query_vars['orders'] ) ) {
-                $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
+//             global $wp;
 
-                if (
-                    $order->get( 'payment_gateway' ) === $this->id
-                    && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
-                ) {
-                    echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
-                }
-            }
-        }
+//             if ( ! empty( $wp->query_vars['orders'] ) ) {
+//                 $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
+
+//                 if (
+//                     $order->get( 'payment_gateway' ) === $this->id
+//                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
+//                 ) {
+//                     echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+//                 }
+//             }
+//         }
 
         /**
          * Called when the Update Payment Method form is submitted from a single order view on the student dashboard.
@@ -177,7 +178,7 @@ HTML;
          * @version  3.10.0
          */
         public function handle_payment_source_switch($order, $form_data = array()): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $previous_gateway = $order->get( 'payment_gateway' );
 
@@ -194,7 +195,7 @@ HTML;
                 $this->paghiper_process_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
                 }
             }
 
@@ -214,10 +215,10 @@ HTML;
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             if ('yes' === $configs['logEnabled']) {
-                $this->log( 'Pix Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
+                $this->log( 'Bank Slip Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
             }
 
             // Pre validate CPF.
@@ -225,7 +226,7 @@ HTML;
 
             if ( is_wp_error( $cpf_info ) ) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', $cpf_info );
+                    $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', $cpf_info );
                 }
 
                 return llms_add_notice( $cpf_info->get_error_message(), 'error' );
@@ -241,10 +242,10 @@ HTML;
 
             if ( $total < 3.00 ) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
+                    $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00. O valor do pix esta abaixo do minimo permitido de R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00. O valor do boleto está abaixo do minimo permitido de R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -263,7 +264,7 @@ HTML;
                             'source_description' => __( 'Free', 'lifterlms' ),
                             'transaction_id' => uniqid(),
                             'status' => 'llms-txn-succeeded',
-                            'payment_gateway' => 'pix',
+                            'payment_gateway' => 'bankSlip',
                             'payment_type' => 'single',
                         )
                     );
@@ -274,8 +275,9 @@ HTML;
 
             $this->paghiper_process_order($order);
 
+            // TODO investigar essa action.
             /*
-             * Action triggered when a pix payment is due.
+             * Action triggered when a bank slip payment is due.
              *
              * @hooked LLMS_Notification: manual_payment_due - 10
              *
@@ -306,9 +308,24 @@ HTML;
          * @param LLMS_Order $order order object
          */
         public function paghiper_process_order($order) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $total = $order->get_price( 'total', array(), 'float' );
+
+            // TODO ver quais outros parâmetros opcionais são interessantes.
+            // {
+            //     "payer_street":"Av Brigadeiro Faria Lima",
+            //     "payer_number":"1461",
+            //     "payer_complement":"Torre Sul 4º Andar",
+            //     "payer_district":"Jardim Paulistano",
+            //     "payer_city":"São Paulo",
+            //     "payer_state":"SP",
+            //     "payer_zip_code":"01452002",
+            //     "discount_cents":"1100",
+            //     "shipping_price_cents":"2595",
+            //     "shipping_methods":"PAC",
+            //     "fixed_description":true,
+            // }
 
             // Payer information
             $payerEmail = $order->billing_email;
@@ -316,16 +333,19 @@ HTML;
             $payerCpfCnpj = $this->get_field_data()['lkn_cpf_cnpj_input_paghiper'];
             $payerPhone = $order->billing_phone;
 
-            // POST parameters
-            $url = $configs['urlPix'];
+            // POST body parameters
+            $url = $configs['urlSlip'];
             $apiKey = $configs['apiKey'];
             $orderId = $order->get( 'id' );
-            $daysToDue = empty($configs['daysDueDate']) ? '1' : $configs['daysDueDate'];
-            $notificationUrl = site_url() . '/wp-json/lkn-paghiper-pix-listener/v1/notification';
+            $slipType = 'boletoA4'; // TODO ver se permite o usuário escolher, se coloca nas configurações...
+            $daysToDue = empty($configs['daysDueDate']) ? '5' : $configs['daysDueDate'];
+            $notificationUrl = site_url() . '/wp-json/lkn-paghiper-slip-listener/v1/notification';
             $itemQtd = '1';
             $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
             $itemId = $order->product_id;
             $itemPriceCents = number_format($total, 2, '', '');
+
+            // POST head parameters
             $mediaType = 'application/json';
             $charSet = 'UTF-8';
 
@@ -338,6 +358,7 @@ HTML;
                 'payer_cpf_cnpj' => $payerCpfCnpj,
                 'payer_phone' => $payerPhone,
                 'days_due_date' => $daysToDue,
+                'type_bank_slip' => $slipType,
                 'notification_url' => $notificationUrl,
                 'items' => array(
                     array(
@@ -361,30 +382,32 @@ HTML;
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
 
             // Faz a requisição
-            $requestResponse = $this->lkn_paghiper_pix_request($dataBody, $dataHeader, $url . 'invoice/create');
+            $requestResponse = $this->lkn_paghiper_slip_request($dataBody, $dataHeader, $url . 'transaction/create/');
 
             // Log request error if not success
-            if ('success' != $requestResponse['pix_create_request']['result']) {
+            if ('success' != $requestResponse['create_request']['result']) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log( 'Pix Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Pix');
+                    llms_log( 'Bank Slip Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Bank Slip');
                 }
 
-                return llms_add_notice( 'Pix API error: ' . $requestResponse['pix_create_request']['response_message'], 'error' );
+                return llms_add_notice( 'Bank Slip API error: ' . $requestResponse['create_request']['response_message'], 'error' );
             }
 
             if (isset($requestResponse)) {
-                if ('reject' != $requestResponse['pix_create_request']['result']) {
-                    $order->set('pix_qrcode_image', $requestResponse['pix_create_request']['pix_code']['qrcode_image_url']);
-                    $order->set('pix_emv_code', $requestResponse['pix_create_request']['pix_code']['emv']);
-                    $order->set('pix_transaction_id', $requestResponse['pix_create_request']['transaction_id']);
+                if ('reject' != $requestResponse['create_request']['result']) {
+                    $order->set('slip_transaction_id', $requestResponse['create_request']['transaction_id']);
+                    $order->set('slip_digitable_line', $requestResponse['create_request']['bank_slip']['digitable_line']);
+                    $order->set('slip_url_slip', $requestResponse['create_request']['bank_slip']['url_slip']);
+                    $order->set('slip_url_slip_pdf', $requestResponse['create_request']['bank_slip']['url_slip_pdf']);
+                    $order->set('slip_bar_code_number', $requestResponse['create_request']['bank_slip']['bar_code_number_to_image']);
                 } else {
-                    return llms_add_notice( 'Pix API Error: Operação rejeitada, motivo: ' . $requestResponse['pix_create_request']['response_message'], 'error' );
+                    return llms_add_notice( 'Bank Slip API Error: Operação rejeitada, motivo: ' . $requestResponse['create_request']['response_message'], 'error' );
                 }
             }
         }
 
         /**
-         * PagHiper Pix Request.
+         * PagHiper Bank Slip Request.
          *
          * @since 1.0.0
          *
@@ -394,9 +417,9 @@ HTML;
          *
          * @return array
          */
-        public function lkn_paghiper_pix_request($dataBody, $dataHeader, $url) {
+        public function lkn_paghiper_slip_request($dataBody, $dataHeader, $url) {
             try {
-                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
                 $args = array(
                     'headers' => $dataHeader,
@@ -409,13 +432,13 @@ HTML;
                 $request = wp_remote_post($url, $args);
 
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Pix');
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip');
                 }
 
                 return json_decode(wp_remote_retrieve_body($request), true);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log('Date: ' . date('d M Y H:i:s') . ' pix gateway POST error: ' . $e->getMessage() . \PHP_EOL );
+                    $this->log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway POST error: ' . $e->getMessage() . \PHP_EOL );
                 }
 
                 return array();
@@ -423,7 +446,7 @@ HTML;
         }
 
         /**
-         * Pix status Listener.
+         * Bank Slip status Listener.
          *
          * @since 1.0.0
          *
@@ -431,15 +454,15 @@ HTML;
          *
          * @return WP_REST_Response
          */
-        public static function get_pix_notification($request) {
+        public static function get_slip_notification($request) {
             if (isset($request['transaction_id'])) {
                 try {
-                    $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+                    $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
                     $request = $request->get_body_params();
 
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' pix listener - POST received: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Pix Listener');
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST received: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip Listener');
                     }
 
                     // Body parameters
@@ -474,10 +497,10 @@ HTML;
                         'httpversion' => '1.0',
                     );
 
-                    $response = wp_remote_post($configs['urlPix'] . 'invoice/notification/', $args);
+                    $response = wp_remote_post($configs['urlSlip'] . 'transaction/notification/', $args);
 
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' pix response - POST: ' . var_export($response, true), 'PagHiper - Pix Listener');
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip response - POST: ' . var_export($response, true), 'PagHiper - Bank Slip Listener');
                     }
 
                     $responseArr = json_decode(wp_remote_retrieve_body($response), true);
@@ -485,13 +508,13 @@ HTML;
                     // Log request error if not success
                     if ('success' != $responseArr['status_request']['result']) {
                         if ('yes' === $configs['logEnabled']) {
-                            llms_log('Date: ' . date('d M Y H:i:s') . ' pix listener - POST reject: ' . var_export($responseArr, true), 'PagHiper - Pix Listener');
+                            llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST reject: ' . var_export($responseArr, true), 'PagHiper - Bank Slip Listener');
 
                             return false;
                         }
                     } elseif ('success' == $responseArr['status_request']['result']) {
                         if ('yes' === $configs['logEnabled']) {
-                            llms_log('Date: ' . date('d M Y H:i:s') . ' pix listener - POST: ' . var_export($responseArr, true), 'PagHiper - Pix Listener');
+                            llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST: ' . var_export($responseArr, true), 'PagHiper - Bank Slip Listener');
                         }
                     }
 
@@ -504,20 +527,22 @@ HTML;
                     $recurrency = $orderObj->is_recurring();
 
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' pix listener - GET order status: Order #' . var_export($orderId, true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true), 'PagHiper - Pix Listener');
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - GET order status: Order #' . var_export($orderId, true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true), 'PagHiper - Bank Slip Listener');
                     }
 
                     // Altera o status do pedido no lifterLMS de acordo com o status recebido pelo PagHiper.
-                    Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::lkn_order_set_status($orderObj, $orderStatus, $recurrency);
+                    Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::lkn_order_set_status($orderObj, $orderStatus, $recurrency);
 
                     return rest_ensure_response(array_merge($request));
                 } catch (Exception $e) {
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' pix listener - POST error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix Listener');
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip Listener');
                     }
                 }
             }
         }
+
+        // TODO continnuar daqui.
 
         /**
          * Update the record transaction dashboard.
@@ -558,11 +583,11 @@ HTML;
                     if ($recurrency) {
                         $order->set('status', 'llms-active');
 
-                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::att_record_transaction($order, 'Signature', 'recurring');
+                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::att_record_transaction($order, 'Signature', 'recurring');
                     } else {
                         $order->set('status', 'llms-completed');
 
-                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix::att_record_transaction($order, 'Signature', 'single');
+                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::att_record_transaction($order, 'Signature', 'single');
                     }
                 } elseif ('canceled' == $status) {
                     $order->set('status', 'llms-cancelled');
@@ -713,35 +738,35 @@ HTML;
              *
              * @var string
              */
-            $this->id = 'pix';
+            $this->id = 'bankSlip';
 
             /*
              * The title of the gateway displayed in admin panel.
              *
              * @var string
              */
-            $this->admin_title = __( 'Pix', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->admin_title = __( 'Bank Slip', 'payment-banking-slip-pix-for-lifterlms' );
 
             /*
              * The description of the gateway displayed in admin panel on settings screens.
              *
              * @var string
              */
-            $this->admin_description = __( 'Allow customers to purchase courses and memberships using Pix.', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->admin_description = __( 'Allow customers to purchase courses and memberships using bank slip.', 'payment-banking-slip-pix-for-lifterlms' );
 
             /*
              * The title of the gateway.
              *
              * @var string
              */
-            $this->title = __( 'Pix', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->title = __( 'Bank Slip', 'payment-banking-slip-pix-for-lifterlms' );
 
             /*
              * The description of the gateway displayed to users.
              *
              * @var string
              */
-            $this->description = __( 'Payment via pix', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->description = __( 'Payment via bank slip', 'payment-banking-slip-pix-for-lifterlms' );
 
             $this->supports = array(
                 'checkout_fields' => true,
@@ -762,3 +787,4 @@ HTML;
         }
     }
 }
+// TODO Ver como está a inscrição #2748 (Ester...) O certo é que esteja como Em espera e gerar novo qr code pix (novo processo pag).
