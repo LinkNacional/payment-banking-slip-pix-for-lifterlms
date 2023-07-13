@@ -120,45 +120,54 @@ HTML;
         }
 
         public function after_view_order_table(): void {
-            // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
-            $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
-            $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
-
-            // Obtendo o obj $order a partir da key
-            $objOrder = llms_get_order_by_key('#' . $orderId);
-
-            // Obtendo qrCode e emvCode
-            $urlQrCode = $objOrder->pix_qrcode_image;
-            $emvCode = $objOrder->pix_emv_code;
-            $transactionId = $objOrder->pix_transaction_id;
-
-            $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
-            $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
-
-            $paymentArea = <<<HTML
-            <h2>{$title}</h2> 
-            <div class="lkn_payment_area">
-                <div class="lkn_qrcode_div"> 
-                <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
-                </div>
-                <div class="lkn_emvcode_div"> 
-                <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
-                <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
-                </div>
-            </div>
-            
-HTML;
-
             global $wp;
 
+            // Verificação para esse código não ser executado pela classe manual, que não possui a func after_view_order_table.
             if ( ! empty( $wp->query_vars['orders'] ) ) {
                 $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
 
-                if (
-                    $order->get( 'payment_gateway' ) === $this->id
-                    && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
-                ) {
-                    echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+                if ($order->get( 'payment_gateway' ) === $this->id) {
+                    // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
+                    $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
+                    $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
+
+                    // Obtendo o obj $order a partir da key
+                    $objOrder = llms_get_order_by_key('#' . $orderId);
+
+                    // Obtendo qrCode e emvCode
+                    $urlQrCode = $objOrder->pix_qrcode_image;
+                    $emvCode = $objOrder->pix_emv_code;
+                    $transactionId = $objOrder->pix_transaction_id;
+
+                    $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
+                    $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
+
+                    $paymentArea = <<<HTML
+                    <h2>{$title}</h2> 
+                    <div class="lkn_payment_area">
+                        <div class="lkn_qrcode_div"> 
+                        <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
+                        </div>
+                        <div class="lkn_emvcode_div"> 
+                        <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
+                        <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
+                        </div>
+                    </div>
+            
+HTML;
+
+                    global $wp;
+
+                    if ( ! empty( $wp->query_vars['orders'] ) ) {
+                        $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
+
+                        if (
+                            $order->get( 'payment_gateway' ) === $this->id
+                            && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
+                        ) {
+                            echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+                        }
+                    }
                 }
             }
         }
@@ -315,6 +324,11 @@ HTML;
             $payerName = $order->get_customer_name();
             $payerCpfCnpj = $this->get_field_data()['lkn_cpf_cnpj_input_paghiper'];
             $payerPhone = $order->billing_phone;
+            $payerHStreet = $order->billing_address_1;
+            $payerHNumber = $order->billing_address_2;
+            $payerHCity = $order->billing_city;
+            $payerHState = $order->billing_state;
+            $payerHZipCode = $order->billing_zip;
 
             // POST parameters
             $url = $configs['urlPix'];
@@ -337,6 +351,11 @@ HTML;
                 'payer_name' => $payerName,
                 'payer_cpf_cnpj' => $payerCpfCnpj,
                 'payer_phone' => $payerPhone,
+                'payer_street' => $payerHStreet,
+                'payer_number' => $payerHNumber,
+                'payer_city' => $payerHCity,
+                'payer_state' => $payerHState,
+                'payer_zip_code' => $payerHZipCode,
                 'days_due_date' => $daysToDue,
                 'notification_url' => $notificationUrl,
                 'items' => array(

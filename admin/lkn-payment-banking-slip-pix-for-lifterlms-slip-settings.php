@@ -51,13 +51,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'number',
             );
 
-            $fields[] = array(
-                'id' => $gateway->get_option_name( 'early_payment_discounts_days' ),
-                'title' => __( 'Early payment discount days', 'payment-banking-slip-pix-for-lifterlms' ),
-                'desc' => '<br>' . __( 'Descrição dias de adiantamento para pagamento com desconto.', 'payment-banking-slip-pix-for-lifterlms' ),
-                'type' => 'number',
-            );
-
             return $fields;
         }
     }

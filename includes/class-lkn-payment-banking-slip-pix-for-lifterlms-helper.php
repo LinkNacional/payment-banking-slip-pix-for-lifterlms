@@ -133,13 +133,15 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
 
         $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
         $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . date('d.m.Y-H.i.s') . '.log';
+
         $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
         $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
         $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
-        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id), '1');
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+        // TODO adicionar minutesDueDate numa possível versão Pro.
+
         $configs['urlPix'] = 'https://pix.paghiper.com/';
         $configs['urlSlip'] = 'https://api.paghiper.com/';
-        // TODO adicionar minutesDueDate numa possível versão Pro.
 
         return $configs;
     }
