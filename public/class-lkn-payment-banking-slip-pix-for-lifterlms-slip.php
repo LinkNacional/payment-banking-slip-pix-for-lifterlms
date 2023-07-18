@@ -1,5 +1,10 @@
 <?php
-/**
+
+require LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . '/vendor/autoload.php';
+
+use Picqer\Barcode\BarcodeGeneratorPNG;
+
+/*
  * Bank Slip Payment Gateway Class.
  *
  * @since 1.0.0
@@ -14,7 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip extends LLMS_Payment_Gateway {
+    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip extends LLMS_Payment_Gateway
+    {
         /**
          * A description of the payment proccess.
          *
@@ -49,7 +55,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @version 1.0.0
          */
-        public function __construct() {
+        public function __construct()
+        {
             $this->set_variables();
 
             add_filter( 'llms_get_gateway_settings_fields', array($this, 'slip_settings_fields'), 10, 2 );
@@ -58,7 +65,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
         }
 
-        public function enqueue_tooltip_scripts(): void {
+        public function enqueue_tooltip_scripts(): void
+        {
             wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
             wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
         }
@@ -73,7 +81,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @return array
          */
-        public function slip_settings_fields($default_fields, $gateway_id) {
+        public function slip_settings_fields($default_fields, $gateway_id)
+        {
             if ( $this->id === $gateway_id ) {
                 require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-slip-settings.php';
 
@@ -90,7 +99,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @since 1.0.0
          */
-        public function before_view_order_table(): void {
+        public function before_view_order_table(): void
+        {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $paymentInstruction = $configs['paymentInstruction'];
@@ -120,7 +130,8 @@ HTML;
         }
 
         // TODO adaptar completamente ao modelo de boleto (Código de barras, botão copiar código, botão link PDF)
-        public function after_view_order_table(): void {
+        public function after_view_order_table(): void
+        {
             global $wp;
 
             // Verificação para esse código não ser executado pela classe manual, que não possui a func after_view_order_table.
@@ -135,27 +146,30 @@ HTML;
                     // Obtendo o obj $order a partir da key
                     $objOrder = llms_get_order_by_key('#' . $orderId);
 
-                    // Obtendo qrCode e emvCode
+                    // Obtendo o código digitável do boleto, o pdf e o código de barras
                     $digitableLine = $objOrder->slip_digitable_line;
-                    $urlSlip = $objOrder->slip_url_slip;
+                    $copyableLine = str_replace(array(' ', '.'), '', $digitableLine);
                     $urlSlipPdf = $objOrder->slip_url_slip_pdf;
+
                     $barCodeNumber = $objOrder->slip_bar_code_number;
 
+                    // Gerando imagem do código de barras com framework picqer.
+                    $generator = new BarcodeGeneratorPNG();
+                    $barcodeHtml = $generator->getBarcode($barCodeNumber, $generator::TYPE_INTERLEAVED_2_5, 4, 200);
+                    $barcode64 = base64_encode($barcodeHtml);
+
                     $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
-                    $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
+                    $buttonTitle = esc_html__('Copy slip code', 'payment-banking-slip-pix-for-lifterlms');
 
                     $paymentArea = <<<HTML
                     <h2>{$title}</h2>
-                    <div class="lkn_payment_area">
-                        <div class="lkn_qrcode_div">
-                        <img class="lkn_qrcode" src="{$barCodeNumber}" alt="Imagem">
-                        <p>{$barCodeNumber}</p>
-                        <p>{$digitableLine}</p>
-                        <p>{$urlSlip}</p>
-                        <p>{$urlSlipPdf}</p>
+                    <div class="lkn_payment_slip_area">
+                        <div class="lkn_barcode_div">
+                        <img class="lkn_barcode" src="data:image/png;base64,{$barcode64}" alt="Imagem">
+                        <a id="lkn_slip" href="{$urlSlipPdf}"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="Baixar PDF do boleto">Baixar Boleto</button></a>
                         </div>
-                        <div class="lkn_emvcode_div">
-                        <textarea id="lkn_emvcode" readonly>{$barCodeNumber}</textarea>
+                        <div class="lkn_copyline_div">
+                        <textarea id="lkn_emvcode" readonly>{$copyableLine}</textarea>
                         <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
                         </div>
                     </div>
@@ -191,7 +205,8 @@ HTML;
          *
          * @version  3.10.0
          */
-        public function handle_payment_source_switch($order, $form_data = array()): void {
+        public function handle_payment_source_switch($order, $form_data = array()): void
+        {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $previous_gateway = $order->get( 'payment_gateway' );
@@ -228,7 +243,8 @@ HTML;
          * @param LLMS_Student     $student student object
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
-        public function handle_pending_order($order, $plan, $student, $coupon = false) {
+        public function handle_pending_order($order, $plan, $student, $coupon = false)
+        {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             if ('yes' === $configs['logEnabled']) {
@@ -268,8 +284,8 @@ HTML;
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                // Free trial, reduced to free via coupon, etc....
-                // We do want to record a transaction and then generate a receipt.
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -320,7 +336,8 @@ HTML;
          *
          * @param LLMS_Order $order order object
          */
-        public function paghiper_process_order($order) {
+        public function paghiper_process_order($order)
+        {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             $total = $order->get_price( 'total', array(), 'float' );
@@ -425,7 +442,8 @@ HTML;
          *
          * @return array
          */
-        public function lkn_paghiper_slip_request($dataBody, $dataHeader, $url) {
+        public function lkn_paghiper_slip_request($dataBody, $dataHeader, $url)
+        {
             try {
                 $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
@@ -462,7 +480,8 @@ HTML;
          *
          * @return WP_REST_Response
          */
-        public static function get_slip_notification($request) {
+        public static function get_slip_notification($request)
+        {
             if (isset($request['transaction_id'])) {
                 try {
                     $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
@@ -559,7 +578,8 @@ HTML;
          * @param string     $description
          * @param string     $paymentType
          */
-        public function att_record_transaction($order, $description, $paymentType): void {
+        public function att_record_transaction($order, $description, $paymentType): void
+        {
             $order->record_transaction(
                 array(
                     'amount' => $order->get_price( 'total', array(), 'float' ),
@@ -581,7 +601,8 @@ HTML;
          * @param string     $status
          * @param bool       $recurrency
          */
-        public static function lkn_order_set_status($order, $status, $recurrency) {
+        public static function lkn_order_set_status($order, $status, $recurrency)
+        {
             try {
                 $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
@@ -626,7 +647,8 @@ HTML;
          *
          * @version  3.10.0
          */
-        public function handle_recurring_transaction($order) {
+        public function handle_recurring_transaction($order)
+        {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
             // Switch to order on hold if it's a paid order.
@@ -652,7 +674,8 @@ HTML;
          *
          * @return bool
          */
-        public function is_enabled() {
+        public function is_enabled()
+        {
             return ( 'yes' === $this->get_enabled() ) ? true : false;
         }
 
@@ -663,7 +686,8 @@ HTML;
          *
          * @return string
          */
-        public function get_fields() {
+        public function get_fields()
+        {
             ob_start();
             llms_get_template(
                 'lkn-payment-banking-slip-pix-for-lifterlms-slip-checkout-fields.php',
@@ -683,7 +707,8 @@ HTML;
          *
          * @return array|WP_Error
          */
-        protected function get_field_data() {
+        protected function get_field_data()
+        {
             $errs = new WP_Error();
             $data = array();
 
@@ -714,7 +739,8 @@ HTML;
          *
          * @return bool|llms_notice
          */
-        protected function cpfValido($cpf) {
+        protected function cpfValido($cpf)
+        {
             $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
             if (strlen($cpf) != 11) {
@@ -738,7 +764,8 @@ HTML;
             return true;
         }
 
-        protected function set_variables(): void {
+        protected function set_variables(): void
+        {
             /*
              * The gateway unique ID.
              *
