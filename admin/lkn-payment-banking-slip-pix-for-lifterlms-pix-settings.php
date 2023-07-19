@@ -9,10 +9,8 @@
 defined( 'ABSPATH' ) || exit;
 
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings
-    {
-        public static function set_settings()
-        {
+    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings {
+        public static function set_settings() {
             $gateway = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms::get_gateways( 'pix' );
 
             $fields = array();

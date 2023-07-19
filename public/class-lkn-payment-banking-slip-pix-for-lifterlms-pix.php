@@ -262,8 +262,8 @@ HTML;
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                // Free trial, reduced to free via coupon, etc....
-                // We do want to record a transaction and then generate a receipt.
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
