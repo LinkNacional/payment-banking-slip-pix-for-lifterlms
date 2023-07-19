@@ -10,7 +10,7 @@
     flex-wrap: wrap;
     align-items: top;
     border: 3px solid rgb(104, 104, 104);
-    padding: 20px;
+    padding: 15px;
 }
 
 .lkn_qrcode_div {
@@ -26,7 +26,6 @@
 }
 
 .lkn_copyline_div {
-    margin-top: 16px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -40,11 +39,14 @@
 
 .lkn_barcode_div {
     width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .lkn_barcode {
     width: 100%;
-    height: 40%;
+    height: 45%;
 }
 
 #lkn_emvcode {
@@ -54,11 +56,26 @@
     white-space: pre-wrap;
 }
 
-#lkn_copy_code {
+/* #lkn_copy_slip_code {
     margin-top: 5%;
     width: auto;
+    min-width: 20%;
+    min-height: 40%;
+    height: auto;
+    background: #e1e1e1;
+    color: #414141;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+} */
+
+#lkn_copy_code {
+    margin-top: 12%;
+    width: auto;
     min-width: 35%;
-    min-height: 25%;
+    min-height: 14%;
     height: auto;
     background: #e1e1e1;
     color: #414141;
@@ -70,11 +87,10 @@
 }
 
 #lkn_slip_pdf {
-    margin-top: 5%;
-    margin-left: 32%;
+    margin-top: 15%;
     width: auto;
-    min-width: 35%;
-    min-height: 20%;
+    min-width: 80%;
+    min-height: 80%;
     height: auto;
     background: #e1e1e1;
     color: #414141;
@@ -83,13 +99,6 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 700;
-}
-
-#lkn_slip {
-    width: auto;
-    min-width: 35%;
-    min-height: 14%;
-    height: auto;
 }
 
 .tooltip {

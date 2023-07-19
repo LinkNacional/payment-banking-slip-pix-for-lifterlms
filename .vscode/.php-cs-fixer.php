@@ -1,20 +1,11 @@
 <?php
 
-/**
- * php-cs-fixer config that follows the WordPress style guide for PHP.
- * Source: https://gist.github.com/srbrunoferreira/5b0d96955c3913f6b1cd805c2a14079d
- * Adapted from: https://github.com/vena/php-cs-fixer-wordpress/blob/main/src/WordPressRuleSet.php
- * WordPress style guide: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/.
- */
-
 return (new PhpCsFixer\Config())
     ->setRules(array(
-        // Built-ins
         'short_scalar_cast' => true,
         'visibility_required' => true,
         'elseif' => true,
         'no_superfluous_elseif' => true,
-        '@PhpCsFixer' => true,
         'align_multiline_comment' => array('comment_type' => 'phpdocs_like'),
         'array_syntax' => array('syntax' => 'long'),
         'binary_operator_spaces' => true,
