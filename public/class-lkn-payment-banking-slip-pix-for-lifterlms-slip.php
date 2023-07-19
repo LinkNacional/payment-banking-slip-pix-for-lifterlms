@@ -266,7 +266,7 @@ HTML;
                     $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00. O valor do boleto está abaixo do minimo permitido de R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -375,6 +375,7 @@ HTML;
                 'days_due_date' => $daysToDue,
                 'type_bank_slip' => $slipType,
                 'notification_url' => $notificationUrl,
+                'partners_id' => '14P9ZE4C',
                 'items' => array(
                     array(
                         'description' => $itemDesc,
@@ -458,168 +459,7 @@ HTML;
 
                 return array();
             }
-        }
-
-        /**
-         * Bank Slip status Listener.
-         *
-         * @since 1.0.0
-         *
-         * @param WP_REST_Request $request Request Object
-         *
-         * @return WP_REST_Response
-         */
-        public static function get_slip_notification($request) {
-            if (isset($request['transaction_id'])) {
-                try {
-                    $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
-
-                    $request = $request->get_body_params();
-
-                    if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST received: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip Listener');
-                    }
-
-                    // Body parameters
-                    $token = $configs['tokenKey'];
-                    $apiKey = sanitize_text_field($request['apiKey']);
-                    $transactionId = sanitize_text_field($request['transaction_id']);
-                    $notificationId = sanitize_text_field($request['notification_id']);
-
-                    // Header parameters
-                    $mediaType = 'application/json';
-                    $charSet = 'UTF-8';
-
-                    $body = array(
-                        'token' => $token,
-                        'apiKey' => $apiKey,
-                        'transaction_id' => $transactionId,
-                        'notification_id' => $notificationId,
-                    );
-
-                    $header = array(
-                        'Accept' => $mediaType,
-                        'Accept-Charset' => $charSet,
-                        'Accept-Encoding' => $mediaType,
-                        'Content-Type' => $mediaType . ';charset=' . $charSet,
-                    );
-
-                    $args = array(
-                        'headers' => $header,
-                        'body' => json_encode($body),
-                        'timeout' => '10',
-                        'redirection' => '5',
-                        'httpversion' => '1.0',
-                    );
-
-                    $response = wp_remote_post($configs['urlSlip'] . 'transaction/notification/', $args);
-
-                    if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip response - POST: ' . var_export($response, true), 'PagHiper - Bank Slip Listener');
-                    }
-
-                    $responseArr = json_decode(wp_remote_retrieve_body($response), true);
-
-                    // Log request error if not success
-                    if ('success' != $responseArr['status_request']['result']) {
-                        if ('yes' === $configs['logEnabled']) {
-                            llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST reject: ' . var_export($responseArr, true), 'PagHiper - Bank Slip Listener');
-
-                            return false;
-                        }
-                    } elseif ('success' == $responseArr['status_request']['result']) {
-                        if ('yes' === $configs['logEnabled']) {
-                            llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST: ' . var_export($responseArr, true), 'PagHiper - Bank Slip Listener');
-                        }
-                    }
-
-                    $orderId = $responseArr['status_request']['order_id'];
-                    $orderStatus = $responseArr['status_request']['status'];
-
-                    // Encontrar o objeto $order a partir da key definida ao ser criado.
-                    $orderObj = llms_get_order_by_key('#' . $orderId);
-
-                    $recurrency = $orderObj->is_recurring();
-
-                    if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - GET order status: Order #' . var_export($orderId, true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true), 'PagHiper - Bank Slip Listener');
-                    }
-
-                    // Altera o status do pedido no lifterLMS de acordo com o status recebido pelo PagHiper.
-                    Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::lkn_order_set_status($orderObj, $orderStatus, $recurrency);
-
-                    return rest_ensure_response(array_merge($request));
-                } catch (Exception $e) {
-                    if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip listener - POST error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip Listener');
-                    }
-                }
-            }
-        }
-
-        /**
-         * Update the record transaction dashboard.
-         *
-         * @since 1.0.0
-         *
-         * @param LLMS_Order $order       Instance of the LLMS_Order
-         * @param string     $description
-         * @param string     $paymentType
-         */
-        public function att_record_transaction($order, $description, $paymentType): void {
-            $order->record_transaction(
-                array(
-                    'amount' => $order->get_price( 'total', array(), 'float' ),
-                    'source_description' => __( $description, 'lifterlms' ),
-                    'transaction_id' => uniqid(),
-                    'status' => 'llms-txn-succeeded',
-                    'payment_gateway' => 'bankSlip',
-                    'payment_type' => $paymentType,
-                )
-            );
-        }
-
-        /**
-         * Set the order status.
-         *
-         * @since 1.0.0
-         *
-         * @param LLMS_Order $order      Instance of the LLMS_Order
-         * @param string     $status
-         * @param bool       $recurrency
-         */
-        public static function lkn_order_set_status($order, $status, $recurrency) {
-            try {
-                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
-
-                if ('completed' == $status || 'paid' == $status) {
-                    if ($recurrency) {
-                        $order->set('status', 'llms-active');
-
-                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::att_record_transaction($order, 'Signature', 'recurring');
-                    } else {
-                        $order->set('status', 'llms-completed');
-
-                        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip::att_record_transaction($order, 'Signature', 'single');
-                    }
-                } elseif ('canceled' == $status) {
-                    $order->set('status', 'llms-cancelled');
-                } elseif ('pending' == $status) {
-                    $order->set('status', 'llms-pending');
-                } elseif ('refunded' == $status) {
-                    $order->set('status', 'llms-refunded');
-
-                    // Realiza o processo de reembolo: Altera os valores da dashbord e registra dentro do pedido a nota de reembolso.
-                    $order->get_last_transaction()->process_refund($order->get_price( 'total', array(), 'float' ), 'PagHiper Bank Slip Refund');
-                } else {
-                    return false;
-                }
-            } catch (Exception $e) {
-                if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway - set order status error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
-                }
-            }
-        }
+        }        
 
         /**
          * Called by scheduled actions to charge an order for a scheduled recurring transaction
@@ -701,7 +541,7 @@ HTML;
                 // In our example, all fields are required.
                 if ( empty( $data[ $field ] ) ) {
                     // Translators: %s = field key.
-                    $errs->add( 'lkn_pix_checkout_required_field_' . $field, sprintf( __( 'Missing required field: CPF', 'payment-banking-slip-pix-for-lifterlms' ), $field ) );
+                    $errs->add( 'lkn_pix_checkout_required_field_' . $field, sprintf( __( 'Missing required field: CPF/CNPJ.', 'payment-banking-slip-pix-for-lifterlms' ), $field ) );
                 }
             }
 
@@ -725,11 +565,11 @@ HTML;
             $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
             if (strlen($cpf) != 11) {
-                return llms_add_notice( sprintf( __( 'Quantidade de digitos do CPF incorreta: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect number of CPF digits: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             if (preg_match('/(\d)\1{10}/', $cpf)) {
-                return llms_add_notice( sprintf( __( 'CPF incorreto e invalido: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             for ($t = 9; $t < 11; ++$t) {
@@ -738,7 +578,7 @@ HTML;
                 }
                 $d = ((10 * $d) % 11) % 10;
                 if ($cpf[$c] != $d) {
-                    return llms_add_notice( sprintf( __( 'CPF invalido: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                 }
             }
 

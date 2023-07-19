@@ -26,14 +26,70 @@ msgstr ""
 msgid "Payment via pix."
 msgstr ""
 
-msgid ""
+msgid "Payment via pix"
+msgstr ""
+
+msgid "CPF / CNPJ"
+msgstr ""
+
+msgid "API Key"
+msgstr ""
+
+msgid "API key is a unique code used to authenticate access to PagHiper API, ensuring secure interactions between applications and the API. %1$sLearn how finding your API key.%2$s"
+msgstr ""
+
+msgid "Token Key"
+msgstr ""
+
+msgid "Token Key is a digital authentication credential that grants access to the PagHiper service, often used to verify the identity of the user and ensure secure communication between parties. %1$sLearn how finding your Token key.%2$s"
+msgstr ""
+
+msgid "Days to due date"
+msgstr ""
+
+msgid "Defines the number of days until the Pix expiration (minimum value: 0)."
+msgstr ""
+
+msgid "Check the payment area below."
+msgstr ""
+
+msgid "Payment Instructions"
+msgstr ""
+
+msgid "Payment Area"
+msgstr ""
+
+msgid "Copy code"
+msgstr ""
+
+msgid "This gateway cannot process transactions for less than R$ 3,00."
+msgstr ""
+
+msgid "Missing required field: CPF/CNPJ."
+msgstr ""
+
+msgid "Incorrect number of CPF digits: "
+msgstr ""
+
+msgid "Incorrect and invalid CPF: "
+msgstr ""
+
+msgid "Invalid CPF: "
+msgstr ""
+
+msgid "Copy slip code"
+msgstr ""
+
+msgid "Bank Slip"
+msgstr ""
+
+msgid "Allow customers to purchase courses and memberships using bank slip."
+msgstr ""
+
+msgid "Payment via bank slip"
 msgstr ""
 
 msgid ""
 msgstr ""
 
-msgid ""
-msgstr ""
-
-msgid ""
-msgstr ""
+// Comando: msgfmt -o payment-banking-slip-pix-for-lifterlms-pt_BR.mo payment-banking-slip-pix-for-lifterlms-pt_BR.po

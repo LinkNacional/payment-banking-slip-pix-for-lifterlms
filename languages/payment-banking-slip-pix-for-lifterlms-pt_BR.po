@@ -1,0 +1,90 @@
+#: Payment Banking Slip Pix for LifterLMS tradução pt_BR
+msgid "Activation Error:"
+msgstr "Erro de ativação:"
+
+msgid "You must have"
+msgstr "Você precisa ter o plugin"
+
+msgid "LifterLMS"
+msgstr "LifterLMS"
+
+msgid "version"
+msgstr "na versão"
+
+msgid "for the Payment Banking Slip Pix for LifterLMS to activate."
+msgstr "para ativar o Payment Banking Slip Pix for LifterLMS."
+
+msgid "plugin installed and activated for the Payment Banking Slip Pix for LifterLMS."
+msgstr "instalado e ativado para o Payment Banking Slip Pix for LifterLMS."
+
+msgid "Allow customers to purchase courses and memberships using Pix."
+msgstr "Permite que os clientes comprem cursos e assinaturas usando Pix."
+
+msgid "Pix"
+msgstr "Pix"
+
+msgid "Payment via pix."
+msgstr "Pagamento via pix."
+
+msgid "Payment via pix"
+msgstr "Pagamento via pix"
+
+msgid "CPF / CNPJ"
+msgstr "CPF / CNPJ"
+
+msgid "API Key"
+msgstr "API Key"
+
+msgid "API key is a unique code used to authenticate access to PagHiper API, ensuring secure interactions between applications and the API. %1$sLearn how finding your API key.%2$s"
+msgstr "API key é um código único, usado para autenticar o acesso à PagHiper, garantindo interações seguras entre a aplicação e a API. %1$sSaiba como encontrar a sua API key.%2$s"
+
+msgid "Token Key"
+msgstr "Token Key"
+
+msgid "Token Key is a digital authentication credential that grants access to the PagHiper service, often used to verify the identity of the user and ensure secure communication between parties. %1$sLearn how finding your Token key.%2$s"
+msgstr "Token key é uma credencial digital de autenticação que concede acesso ao serviço da PagHiper, frequentemente usado para verificar a identidade do usuário e garantir comunicação segura entre as partes. %1$sSaiba como encontrar a sua Token key.%2$s"
+
+msgid "Days to due date"
+msgstr "Dias para vencimento"
+
+msgid "Defines the number of days until the Pix expiration (minimum value: 0)."
+msgstr "Define o número de dias até a expiração do Pix (valor mínimo: 0)."
+
+msgid "Check the payment area below."
+msgstr "Verifique a área de pagamento abaixo."
+
+msgid "Payment Instructions"
+msgstr "Instruções de pagamento"
+
+msgid "Payment Area"
+msgstr "Área de Pagamento"
+
+msgid "Copy code"
+msgstr "Copiar código"
+
+msgid "This gateway cannot process transactions for less than R$ 3,00."
+msgstr "Esse gateway não pode processar transações menores que R$ 3,00."
+
+msgid "Missing required field: CPF/CNPJ."
+msgstr "Campo obrigatório ausente: CPF/CNPJ."
+
+msgid "Incorrect number of CPF digits: "
+msgstr "Número incorreto de dígitos do CPF: "
+
+msgid "Incorrect and invalid CPF: "
+msgstr "CPF incorreto e invalido: "
+
+msgid "Invalid CPF: "
+msgstr "CPF invalido: "
+
+msgid "Copy slip code"
+msgstr "Copiar código boleto"
+
+msgid "Bank Slip"
+msgstr "Boleto Bancário"
+
+msgid "Allow customers to purchase courses and memberships using bank slip."
+msgstr "Permite que os clientes comprem cursos e assinaturas usando boleto bancário."
+
+msgid "Payment via bank slip"
+msgstr "Pagamento via boleto bancário"

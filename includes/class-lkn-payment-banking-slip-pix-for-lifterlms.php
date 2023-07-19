@@ -75,7 +75,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         $this->define_public_hooks();
         Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::verify_plugin_dependencies();
         $this->init_gateways();
-        $this->init_listener_routes();
     }
 
     /**
@@ -148,36 +147,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip';
 
         return $gateways;
-    }
-
-    /**
-     * Add new routes for listen the PagHiper payments.
-     *
-     * @since 1.0.0
-     */
-    public function init_listener_routes(): void {
-        add_action('rest_api_init', array($this, 'register_routes'));
-    }
-
-    /**
-     * Routes register.
-     *
-     * @since   1.0.0
-     */
-    public function register_routes(): void {
-        // For pix.
-        register_rest_route('lkn-paghiper-pix-listener/v1', '/notification', array(
-            'methods' => 'POST',
-            'callback' => array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix', 'get_pix_notification'),
-            'permission_callback' => __return_empty_string(),
-        ));
-
-        // For banking-slip.
-        register_rest_route('lkn-paghiper-slip-listener/v1', '/notification', array(
-            'methods' => 'POST',
-            'callback' => array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip', 'get_slip_notification'),
-            'permission_callback' => __return_empty_string(),
-        ));
     }
 
     /**
