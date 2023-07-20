@@ -89,7 +89,11 @@ msgstr ""
 msgid "Payment via bank slip"
 msgstr ""
 
-msgid ""
+msgid "Enable bank slip and pix payment for LifterLMS."
 msgstr ""
 
-// Comando: msgfmt -o payment-banking-slip-pix-for-lifterlms-pt_BR.mo payment-banking-slip-pix-for-lifterlms-pt_BR.po
+msgid "Download Bank Slip"
+msgstr ""
+
+msgid "Download Bank Slip PDF"
+msgstr ""

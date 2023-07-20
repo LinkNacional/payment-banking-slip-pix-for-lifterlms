@@ -1,14 +1,14 @@
 <?php
+
 /**
- * Add checkout fields.
+ * Add bank slip checkout fields.
  *
  * @see        https://www.linknacional.com/
  * @since      1.0.0
- *
- * @version    1.0.0
  */
 defined( 'ABSPATH' ) || exit;
 
+// The CPF / CNPJ field for bank slip gateway.
 llms_form_field(
     array(
         'columns' => 7,

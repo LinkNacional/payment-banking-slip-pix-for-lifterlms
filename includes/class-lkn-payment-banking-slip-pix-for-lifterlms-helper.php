@@ -3,7 +3,6 @@
 /**
  * @see        https://www.linknacional.com/
  * @since      1.0.0
- *
  * @author     Link Nacional
  */
 final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
@@ -128,6 +127,14 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
     }
 
+    /**
+     * Array for pick the data of the gateways settings in LifterLMS.
+     *
+     * @since 1.0.0
+     *
+     * @param string $gateway_id
+     * @return array $configs
+     */
     final public static function get_configs($gateway_id) {
         $configs = array();
 
@@ -168,7 +175,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     }
 
     /**
-     * Catch the number in the midle of bars.
+     * Catch an number in the midle of bars.
      *
      * @since 1.0.0
      *

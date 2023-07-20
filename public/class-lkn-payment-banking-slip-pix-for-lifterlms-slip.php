@@ -2,6 +2,7 @@
 
 require LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . '/vendor/autoload.php';
 
+// Framewor for generate bank slip barcode.
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 /*
@@ -63,6 +64,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
         }
 
+        /**
+         * Enqueue tooltip for using in Payment Area buttons.
+         *
+         * @since   1.0.0
+         */
         public function enqueue_tooltip_scripts(): void {
             wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
             wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
@@ -98,9 +104,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
         public function before_view_order_table(): void {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
+            // Get Payment Instruction value.
             $paymentInstruction = $configs['paymentInstruction'];
+
             $payInstTitle = esc_html__( 'Payment Instructions', 'payment-banking-slip-pix-for-lifterlms' );
 
+            // Make the HTML for present the Payment Instructions.
             $paymentInst = <<<HTML
             <div class="llms-notice llms-info">
                 <h3>
@@ -110,6 +119,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             </div>
 HTML;
 
+            // Below is the verification of payment of the order, to present or not the Instructions.
             global $wp;
 
             if ( ! empty( $wp->query_vars['orders'] ) ) {
@@ -124,42 +134,51 @@ HTML;
             }
         }
 
+        /**
+         * Output payment area if the order is pending.
+         *
+         * @since 1.0.0
+         */
         public function after_view_order_table(): void {
             global $wp;
 
-            // Verificação para esse código não ser executado pela classe manual, que não possui a func after_view_order_table.
             if ( ! empty( $wp->query_vars['orders'] ) ) {
                 $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
 
+                // Verification of the gateway, to not execute in other gateways which has no defined this function.
                 if ($order->get( 'payment_gateway' ) === $this->id) {
-                    // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
+                    // Getting orderId number.
                     $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
                     $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
 
-                    // Obtendo o obj $order a partir da key
+                    // Getting obj $order from key.
                     $objOrder = llms_get_order_by_key('#' . $orderId);
 
-                    // Obtendo o código digitável do boleto, o pdf e o código de barras
+                    // Getting the slip digitable line and the slip PDF url.
                     $digitableLine = $objOrder->slip_digitable_line;
                     $copyableLine = str_replace(array(' ', '.'), '', $digitableLine);
                     $urlSlipPdf = $objOrder->slip_url_slip_pdf;
 
+                    // Getting the barcode.
                     $barCodeNumber = $objOrder->slip_bar_code_number;
 
-                    // Gerando imagem do código de barras com framework picqer.
+                    // Generating the barcode image with the framework picqer.
                     $generator = new BarcodeGeneratorPNG();
                     $barcodeHtml = $generator->getBarcode($barCodeNumber, $generator::TYPE_INTERLEAVED_2_5, 4, 250);
                     $barcode64 = base64_encode($barcodeHtml);
 
                     $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
                     $buttonTitle = esc_html__('Copy slip code', 'payment-banking-slip-pix-for-lifterlms');
+                    $downloadButton = esc_html__('Download Bank Slip', 'payment-banking-slip-pix-for-lifterlms');
+                    $downloadTitle = esc_html__('Download Bank Slip PDF', 'payment-banking-slip-pix-for-lifterlms');
 
+                    // Make the HTML for present the Payment Area.
                     $paymentArea = <<<HTML
                     <h2>{$title}</h2>
                     <div class="lkn_payment_slip_area">
                         <div class="lkn_barcode_div">
                         <img class="lkn_barcode" src="data:image/png;base64,{$barcode64}" alt="Imagem">
-                        <a id="lkn_slip" href="{$urlSlipPdf}"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="Download Bank Slip PDF">Download Bank Slip</button></a>
+                        <a id="lkn_slip" href="{$urlSlipPdf}"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="{$downloadTitle}">{$downloadButton}</button></a>
                         </div>
                         <div class="lkn_copyline_div">
                         <textarea id="lkn_emvcode" readonly>{$copyableLine}</textarea>
@@ -169,6 +188,7 @@ HTML;
 
 HTML;
 
+                    // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
 
                     if ( ! empty( $wp->query_vars['orders'] ) ) {
@@ -212,6 +232,7 @@ HTML;
             $order->set( 'gateway_source_id', '' );
             $order->set( 'gateway_subscription_id', '' );
 
+            // Process the switch Bank Slip Order.
             try {
                 $this->paghiper_process_order($order);
             } catch (Exception $e) {
@@ -238,6 +259,7 @@ HTML;
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
+            // Make log.
             if ('yes' === $configs['logEnabled']) {
                 $this->log( 'Bank Slip Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
             }
@@ -245,6 +267,7 @@ HTML;
             // Pre validate CPF.
             $cpf_info = $this->get_field_data();
 
+            // Make error log.
             if ( is_wp_error( $cpf_info ) ) {
                 if ('yes' === $configs['logEnabled']) {
                     $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', $cpf_info );
@@ -258,9 +281,9 @@ HTML;
                 return false;
             }
 
-            // Validate min value.
             $total = $order->get_price( 'total', array(), 'float' );
 
+            // Validate min value.
             if ( $total < 3.00 ) {
                 if ('yes' === $configs['logEnabled']) {
                     $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
@@ -294,6 +317,7 @@ HTML;
                 return $this->complete_transaction( $order );
             }
 
+            // Process Bank Slip Order.
             $this->paghiper_process_order($order);
 
             /*
@@ -321,7 +345,7 @@ HTML;
         }
 
         /**
-         * Process the order.
+         * Process the bank slip order.
          *
          * @since 1.0.0
          *
@@ -330,6 +354,7 @@ HTML;
         public function paghiper_process_order($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
+            // Get the order total price.
             $total = $order->get_price( 'total', array(), 'float' );
 
             // Payer information
@@ -394,13 +419,13 @@ HTML;
                 'Content-Type' => $mediaType . ';charset=' . $charSet,
             );
 
-            // Redefine a order_key do objeto $order, para posterior busca.
+            // Reset the order_key of obj $order for further search.
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
 
-            // Faz a requisição
+            // Make the request.
             $requestResponse = $this->lkn_paghiper_slip_request($dataBody, $dataHeader, $url . 'transaction/create/');
 
-            // Log request error if not success
+            // Log request error if not success.
             if ('success' != $requestResponse['create_request']['result']) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'Bank Slip Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Bank Slip');
@@ -409,6 +434,7 @@ HTML;
                 return llms_add_notice( 'Bank Slip API error: ' . $requestResponse['create_request']['response_message'], 'error' );
             }
 
+            // If request is success, save the important data for present in payment area.
             if (isset($requestResponse)) {
                 if ('reject' != $requestResponse['create_request']['result']) {
                     $order->set('slip_transaction_id', $requestResponse['create_request']['transaction_id']);
@@ -437,6 +463,7 @@ HTML;
             try {
                 $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
+                // Make the request args.
                 $args = array(
                     'headers' => $dataHeader,
                     'body' => json_encode($dataBody),
@@ -445,8 +472,10 @@ HTML;
                     'httpversion' => '1.0',
                 );
 
+                // Make the request.
                 $request = wp_remote_post($url, $args);
 
+                // Register log.
                 if ('yes' === $configs['logEnabled']) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip');
                 }
@@ -476,7 +505,7 @@ HTML;
         public function handle_recurring_transaction($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('bankSlip');
 
-            // Switch to order on hold if it's a paid order.
+            // Switch order status to "on hold" if it's a paid order.
             if ( $order->get_price( 'total', array(), 'float' ) > 0 ) {
                 // Update status.
                 $order->set_status( 'on-hold' );
@@ -640,4 +669,3 @@ HTML;
         }
     }
 }
-// TODO Ver como está a inscrição #2748 (Ester...) O certo é que esteja como Em espera e gerar novo qr code pix (novo processo pag).

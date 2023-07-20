@@ -88,3 +88,12 @@ msgstr "Permite que os clientes comprem cursos e assinaturas usando boleto banc�
 
 msgid "Payment via bank slip"
 msgstr "Pagamento via boleto bancário"
+
+msgid "Enable bank slip and pix payment for LifterLMS."
+msgstr "Ativa o pagamento via boleto bancário e pix para o LifterLMS."
+
+msgid "Download Bank Slip"
+msgstr "Baixar boleto"
+
+msgid "Download Bank Slip PDF"
+msgstr "Baixar PDF do boleto"

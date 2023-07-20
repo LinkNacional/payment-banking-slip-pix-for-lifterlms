@@ -120,6 +120,11 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         return $this->version;
     }
 
+    /**
+     * Add the bank slip and pix gateways in LifterLMS available gateways.
+     * 
+     * @since 1.0.0
+     */
     public function init_gateways(): void {
         $all_activateds = get_option( 'active_plugins' );
         $activeted_plugin = in_array('lifterlms/lifterlms.php', $all_activateds, true);
@@ -136,13 +141,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
 
     /**
      * Add the PagHiper Payment gateways to the list of available gateways.
-     *
-     * @param array
-     * @param mixed $gateways
-     *
+     * 
      * @since 1.0.0
      */
-    public static function add_gateways($gateways) {
+    public static function add_gateways() {
         $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix';
         $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip';
 
@@ -150,7 +152,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
     }
 
     /**
-     * Returns an instance of the gateway.
+     * Returns an instance of an gateway.
      *
      * @since 1.0.0
      *

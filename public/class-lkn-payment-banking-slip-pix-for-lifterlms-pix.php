@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pix Payment Gateway Class.
  *
@@ -58,6 +59,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
         }
 
+        /**
+         * Enqueue tooltip for using in Payment Area buttons.
+         *
+         * @since   1.0.0
+         */
         public function enqueue_tooltip_scripts(): void {
             wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
             wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
@@ -86,16 +92,19 @@ if (class_exists('LLMS_Payment_Gateway')) {
         }
 
         /**
-         * Output payment instructions if the order is pending.
+         * Output payment instructions if the order is pending | on-hold.
          *
          * @since 1.0.0
          */
         public function before_view_order_table(): void {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
+            // Get Payment Instruction value.
             $paymentInstruction = $configs['paymentInstruction'];
+
             $payInstTitle = esc_html__( 'Payment Instructions', 'payment-banking-slip-pix-for-lifterlms' );
 
+            // Make the HTML for present the Payment Instructions.
             $paymentInst = <<<HTML
             <div class="llms-notice llms-info">
                 <h3>
@@ -105,6 +114,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             </div>
 HTML;
 
+            // Below is the verification of payment of the order, to present or not the Instructions.
             global $wp;
 
             if ( ! empty( $wp->query_vars['orders'] ) ) {
@@ -118,30 +128,35 @@ HTML;
                 }
             }
         }
-
+        
+        /**
+         * Output payment area if the order is pending.
+         *
+         * @since 1.0.0
+         */
         public function after_view_order_table(): void {
             global $wp;
 
-            // Verificação para esse código não ser executado pela classe manual, que não possui a func after_view_order_table.
             if ( ! empty( $wp->query_vars['orders'] ) ) {
                 $order = new LLMS_Order( (int) $wp->query_vars['orders']  );
 
+                // Verification of the gateway, to not execute in other gateways which has no defined this function.
                 if ($order->get( 'payment_gateway' ) === $this->id) {
-                    // Obtendo orderId, talvez seja possível obter de forma mais eficiente e menos errática.
+                    // Getting orderId number.
                     $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
                     $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
 
-                    // Obtendo o obj $order a partir da key
+                    // Getting obj $order from key.
                     $objOrder = llms_get_order_by_key('#' . $orderId);
 
-                    // Obtendo qrCode e emvCode
+                    // Getting qrCode and emvCode.
                     $urlQrCode = $objOrder->pix_qrcode_image;
                     $emvCode = $objOrder->pix_emv_code;
-                    $transactionId = $objOrder->pix_transaction_id;
 
                     $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
                     $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
 
+                    // Make the HTML for present the Payment Area.
                     $paymentArea = <<<HTML
                     <h2>{$title}</h2> 
                     <div class="lkn_payment_area">
@@ -156,6 +171,7 @@ HTML;
             
 HTML;
 
+                    // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
 
                     if ( ! empty( $wp->query_vars['orders'] ) ) {
@@ -183,7 +199,6 @@ HTML;
          *
          * @since    3.10.0
          *
-         * @version  3.10.0
          */
         public function handle_payment_source_switch($order, $form_data = array()): void {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
@@ -199,6 +214,7 @@ HTML;
             $order->set( 'gateway_source_id', '' );
             $order->set( 'gateway_subscription_id', '' );
 
+            // Process the switch Pix Order.
             try {
                 $this->paghiper_process_order($order);
             } catch (Exception $e) {
@@ -225,6 +241,7 @@ HTML;
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
+            // Make log.
             if ('yes' === $configs['logEnabled']) {
                 $this->log( 'Pix Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
             }
@@ -232,6 +249,7 @@ HTML;
             // Pre validate CPF.
             $cpf_info = $this->get_field_data();
 
+            // Make error log.
             if ( is_wp_error( $cpf_info ) ) {
                 if ('yes' === $configs['logEnabled']) {
                     $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', $cpf_info );
@@ -245,9 +263,9 @@ HTML;
                 return false;
             }
 
-            // Validate min value.
             $total = $order->get_price( 'total', array(), 'float' );
 
+            // Validate min value.
             if ( $total < 3.00 ) {
                 if ('yes' === $configs['logEnabled']) {
                     $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
@@ -281,6 +299,7 @@ HTML;
                 return $this->complete_transaction( $order );
             }
 
+            // Process Pix Order.
             $this->paghiper_process_order($order);
 
             /*
@@ -308,7 +327,7 @@ HTML;
         }
 
         /**
-         * Process the order.
+         * Process the pix order.
          *
          * @since 1.0.0
          *
@@ -317,6 +336,7 @@ HTML;
         public function paghiper_process_order($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
+            // Get the order total price.
             $total = $order->get_price( 'total', array(), 'float' );
 
             // Payer information
@@ -377,13 +397,13 @@ HTML;
                 'Content-Type' => $mediaType . ';charset=' . $charSet,
             );
 
-            // Redefine a order_key do objeto $order, para posterior busca.
+            // Reset the order_key of obj $order for further search.
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
 
-            // Faz a requisição
+            // Make the request.
             $requestResponse = $this->lkn_paghiper_pix_request($dataBody, $dataHeader, $url . 'invoice/create');
 
-            // Log request error if not success
+            // Log request error if not success.
             if ('success' != $requestResponse['pix_create_request']['result']) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'Pix Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Pix');
@@ -392,6 +412,7 @@ HTML;
                 return llms_add_notice( 'Pix API error: ' . $requestResponse['pix_create_request']['response_message'], 'error' );
             }
 
+            // If request is success, save the important data for present in payment area.
             if (isset($requestResponse)) {
                 if ('reject' != $requestResponse['pix_create_request']['result']) {
                     $order->set('pix_qrcode_image', $requestResponse['pix_create_request']['pix_code']['qrcode_image_url']);
@@ -418,6 +439,7 @@ HTML;
             try {
                 $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
+                // Make the request args.
                 $args = array(
                     'headers' => $dataHeader,
                     'body' => json_encode($dataBody),
@@ -426,8 +448,10 @@ HTML;
                     'httpversion' => '1.0',
                 );
 
+                // Make the request.
                 $request = wp_remote_post($url, $args);
 
+                // Register log.
                 if ('yes' === $configs['logEnabled']) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Pix');
                 }
@@ -457,7 +481,7 @@ HTML;
         public function handle_recurring_transaction($order) {
             $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
-            // Switch to order on hold if it's a paid order.
+            // Switch order status to "on hold" if it's a paid order.
             if ( $order->get_price( 'total', array(), 'float' ) > 0 ) {
                 // Update status.
                 $order->set_status( 'on-hold' );

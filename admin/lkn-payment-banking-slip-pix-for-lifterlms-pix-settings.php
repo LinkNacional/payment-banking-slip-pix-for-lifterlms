@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The admin-specific functionality of the plugin.
+ * The admin-specific additional settings of the pix gateway.
  *
  * @see        https://www.linknacional.com/
  * @since      1.0.0
@@ -15,6 +15,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
             $fields = array();
 
+            // Field for Payment instructions.
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'payment_instructions' ),
                 'desc' => '<br>' . __( 'Displayed to the user when this gateway is selected during checkout. Add information here instructing the student on how to send payment.', 'lifterlms' ),
@@ -22,6 +23,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'textarea',
             );
 
+            // Field for PagHiper API Key.
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'api_key' ),
                 'title' => __( 'API Key', 'payment-banking-slip-pix-for-lifterlms' ),
@@ -33,6 +35,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'password',
             );
 
+            // Field for PagHiper Token Key.
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'token_key' ),
                 'title' => __( 'Token Key', 'payment-banking-slip-pix-for-lifterlms' ),
@@ -44,11 +47,20 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'password',
             );
 
+            // Field for set number of days to due date.
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'days_due_date' ),
                 'title' => __( 'Days to due date', 'payment-banking-slip-pix-for-lifterlms' ),
                 'desc' => '<br>' . __( 'Defines the number of days until the Pix expiration (minimum value: 0).', 'payment-banking-slip-pix-for-lifterlms' ),
                 'type' => 'number',
+            );
+
+            // Field for activate auto capture (Only pro version).
+            $fields[] = array(
+                'id' => $gateway->get_option_name( 'auto_payment_capture' ),
+                'title' => __( 'Enable automatic payment capture.', 'payment-banking-slip-pix-for-lifterlms' ),
+                'desc' => __( 'Automatically capture payment and update order status.', 'payment-banking-slip-pix-for-lifterlms' ),
+                'type' => 'checkbox',
             );
 
             return $fields;
