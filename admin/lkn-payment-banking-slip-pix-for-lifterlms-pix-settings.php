@@ -51,15 +51,20 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'days_due_date' ),
                 'title' => __( 'Days to due date', 'payment-banking-slip-pix-for-lifterlms' ),
-                'desc' => '<br>' . __( 'Defines the number of days until the Pix expiration (minimum value: 0).', 'payment-banking-slip-pix-for-lifterlms' ),
+                'desc' => '<br>' . __( 'Defines the number of days until the Pix expiration.', 'payment-banking-slip-pix-for-lifterlms' ),
                 'type' => 'number',
+                'default' => 1,
+                'step' => 1,
+				'min' => 0,
             );
 
             // Field for activate auto capture (Only pro version).
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'auto_payment_capture' ),
-                'title' => __( 'Enable automatic payment capture.', 'payment-banking-slip-pix-for-lifterlms' ),
-                'desc' => __( 'Automatically capture payment and update order status.', 'payment-banking-slip-pix-for-lifterlms' ),
+                'title' => __( 'Auto payment capture and order updater', 'payment-banking-slip-pix-for-lifterlms' ),
+                'desc' => __( 'Automatically payment capture and update order status.', 'payment-banking-slip-pix-for-lifterlms' ),
+                'desc_tooltip' => __( 'Checking this box will enable the automatic payment capture and order status updater.', 'payment-banking-slip-pix-for-lifterlms' ),
+                'default' => $gateway->get_option( 'disabled' ),
                 'type' => 'checkbox',
             );
 

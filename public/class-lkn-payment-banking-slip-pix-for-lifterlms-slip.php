@@ -178,7 +178,7 @@ HTML;
                     <div class="lkn_payment_slip_area">
                         <div class="lkn_barcode_div">
                         <img class="lkn_barcode" src="data:image/png;base64,{$barcode64}" alt="Imagem">
-                        <a id="lkn_slip" href="{$urlSlipPdf}"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="{$downloadTitle}">{$downloadButton}</button></a>
+                        <a id="lkn_slip" href="{$urlSlipPdf}" target="_blank"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="{$downloadTitle}">{$downloadButton}</button></a>
                         </div>
                         <div class="lkn_copyline_div">
                         <textarea id="lkn_emvcode" readonly>{$copyableLine}</textarea>

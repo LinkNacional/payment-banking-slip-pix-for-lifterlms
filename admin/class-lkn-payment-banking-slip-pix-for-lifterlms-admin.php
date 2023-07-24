@@ -86,6 +86,18 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-admin.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-admin.js', array('jquery', 'freemium-banner-strings'), $this->version, false );
+        
+        $bannerStrings = array(
+            'message' => sprintf(
+                __('Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s', 'payment-banking-slip-pix-for-lifterlms' ),
+                '<a href="https://www.linknacional.com/wordpress/plugins/" target="_blank">',
+                '</a>'
+            )
+        );
+
+        wp_register_script('freemium-banner-strings', '');
+
+        wp_localize_script('freemium-banner-strings', 'bannerStrings', $bannerStrings);
     }
 }

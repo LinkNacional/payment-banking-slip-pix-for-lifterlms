@@ -47,7 +47,10 @@ msgstr ""
 msgid "Days to due date"
 msgstr ""
 
-msgid "Defines the number of days until the Pix expiration (minimum value: 0)."
+msgid "Defines the number of days until the Pix expiration."
+msgstr ""
+
+msgid "Defines the number of days until the Bank Slip expiration."
 msgstr ""
 
 msgid "Check the payment area below."
@@ -96,4 +99,16 @@ msgid "Download Bank Slip"
 msgstr ""
 
 msgid "Download Bank Slip PDF"
+msgstr ""
+
+msgid "Automatically payment capture and update order status."
+msgstr ""
+
+msgid "Checking this box will enable the automatic payment capture and order status updater."
+msgstr ""
+
+msgid "Auto payment capture and order updater"
+msgstr ""
+
+msgid "Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
 msgstr ""

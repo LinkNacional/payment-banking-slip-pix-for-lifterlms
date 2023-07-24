@@ -20,30 +20,27 @@ The [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpr
 
 Payment Banking Slip Pix for LifterLMS plugin is dependent on LifterLMS plugin, please make sure LifterLMS is installed and properly configured before starting Payment Banking Slip Pix for LifterLMS installation.
 
-// TODO continuar daqui.
 **User instructions**
 
 1. Now go to the Settings menu of the LifterLMS;
 
-2. Select the 'Access Control' option;
+2. Select the 'Checkout' option;
 
-3. Look for the option 'Enable spam donation protection' and enable it;
+3. Next to 'Checkout Settings' are the payment methods, select one;
 
-4. Click on the 'Save changes' button;
+4. Look for the option 'Enable / Disable' and click on it, with this the payment method will be active;
 
-5. New options will appear, you can leave the default values or change to something that fits your needs; 
+5. Look for the options 'Api Key' and 'Token Key' and fill them with your PagHiper credentials; 
 
-6. Click on the 'Save changes' button;
+6. Configure the rest of the payment method according to your needs;
 
-7. If you have Recaptcha V3 access keys and want to enable it, look for the option 'Recaptcha donation form' and enable it;
+7. Then, click on the 'Save Changes' button at the top right of page;
 
 8. Click on the 'Save changes' button;
 
-9. New fields will appear, now enter your Recaptcha V3 credentials;
+9. Repeat the same steps for other payment methods.
 
-10. Click on the 'Save changes' button;
-
-The Antispam Donation for GiveWP is now live and working.
+The Payment Banking Slip Pix for LifterLMS is now live and working.
 
 
 == Installation ==
@@ -52,11 +49,11 @@ The Antispam Donation for GiveWP is now live and working.
 
 2. In installed plugins look for the 'add new' option in the header;
 
-3. Click on the 'submit plugin' option in the page title and upload the give-antispam.zip plugin;
+3. Click on the 'submit plugin' option in the page title and upload the payment-banking-slip-pix-for-lifterlms.zip plugin;
 
 4. Click on the 'install now' button and then activate the installed plugin;
 
-The Antispam Donation for GiveWP is now activated.
+The Payment Banking Slip Pix for LifterLMS is now activated.
 
 
 == Frequently Asked Questions ==
@@ -67,7 +64,7 @@ The Antispam Donation for GiveWP is now activated.
 
 = What is needed to use this plugin? =
 
-* GiveWP version 2.3.0 or latter installed and active.
+* LifterLMS version 7.1.4 or latter installed and active.
 
 
 == Screenshots ==
@@ -76,39 +73,12 @@ The Antispam Donation for GiveWP is now activated.
 
 == Changelog ==
 
-= 1.2.2 =
-**31/05/2023**
-* Fixed error message not showing in legacy template.
-
-= 1.2.1 = 
-**26/05/2023**
-* Code refactoring;
-* Removed plugin updater lib;
-* Automatically remove old logs.
-
-= 1.2.0 =
-* Code refactoring and improvements;
-* Add configuration to enable or disable generation of .logs;
-* Add configuration for insertion of IP's banned from making donations.
-
-= 1.1.2 =
-* Fixed Google Recaptcha notice bug for fixed value forms;
-* Adjusted logic to delete old logs;
-* Adjusted antispam logs.
-
-= 1.1.1 =
-* There is now a link in the settings description that redirects to the Recaptcha V3 admin page;
-* Adjusted title of Recaptcha setting.
-
-= 1.1.0 =
-* Antispam Donation for GiveWP now has option to enable and configure Recaptcha V3;
-* Tweaks and fixes in plugin settings;
-* Settings formatting tweaks.
-
 = 1.0.0 =
-* Plugin with the functionality to verify the IP's of donations and, if they are the same, block payment attempts.
+**25/07/2023**
+* Plugin launch.
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-* Plugin with the functionality to verify the IP's of donations and, if they are the same, block payment attempts.
+**25/07/2023**
+* Plugin launch.

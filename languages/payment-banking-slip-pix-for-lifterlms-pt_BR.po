@@ -47,8 +47,11 @@ msgstr "Token key é uma credencial digital de autenticação que concede acesso
 msgid "Days to due date"
 msgstr "Dias para vencimento"
 
-msgid "Defines the number of days until the Pix expiration (minimum value: 0)."
-msgstr "Define o número de dias até a expiração do Pix (valor mínimo: 0)."
+msgid "Defines the number of days until the Pix expiration."
+msgstr "Define o número de dias até o vencimento do Pix."
+
+msgid "Defines the number of days until the Bank Slip expiration."
+msgstr "Define o número de dias até o vencimento do boleto."
 
 msgid "Check the payment area below."
 msgstr "Verifique a área de pagamento abaixo."
@@ -97,3 +100,15 @@ msgstr "Baixar boleto"
 
 msgid "Download Bank Slip PDF"
 msgstr "Baixar PDF do boleto"
+
+msgid "Automatically payment capture and update order status."
+msgstr "Captura de pagamentos e atualização de status de pedidos automáticas."
+
+msgid "Checking this box will enable the automatic payment capture and order status updater."
+msgstr "Marcar essa caixa ativará a captura de pagamentos e o atualizador de status dos pedidos automáticos."
+
+msgid "Auto payment capture and order updater"
+msgstr "Auto captura de pagamentos e atualização de pedidos"
+
+msgid "Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
+msgstr "Obtenha novas funcionalidades com %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
