@@ -171,7 +171,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
             $page_url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
         }
 
-        return $page_url;
+        return sanitize_url($page_url);
     }
 
     /**

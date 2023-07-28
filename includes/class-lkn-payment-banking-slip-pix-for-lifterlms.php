@@ -144,7 +144,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      * 
      * @since 1.0.0
      */
-    public static function add_gateways() {
+    public static function add_gateways($gateways) {
         $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix';
         $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip';
 

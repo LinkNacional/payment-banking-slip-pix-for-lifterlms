@@ -18,7 +18,7 @@ The [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpr
 
 **Dependencies**
 
-Payment Banking Slip Pix for LifterLMS plugin is dependent on LifterLMS plugin, please make sure LifterLMS is installed and properly configured before starting Payment Banking Slip Pix for LifterLMS installation.
+Payment Banking Slip Pix for LifterLMS plugin is dependent on [LifterLMS plugin](https://wordpress.org/plugins/lifterlms/), please make sure LifterLMS is installed and properly configured before starting Payment Banking Slip Pix for LifterLMS installation.
 
 **User instructions**
 

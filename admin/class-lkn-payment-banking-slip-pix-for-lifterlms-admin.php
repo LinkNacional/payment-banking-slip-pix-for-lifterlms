@@ -86,7 +86,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-admin.js', array('jquery', 'freemium-banner-strings'), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-admin.js', array('jquery', 'payment-banking-slip-pix-for-lifterlms'), $this->version, false );
         
         $bannerStrings = array(
             'message' => sprintf(
@@ -96,8 +96,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
             )
         );
 
-        wp_register_script('freemium-banner-strings', '');
-
-        wp_localize_script('freemium-banner-strings', 'bannerStrings', $bannerStrings);
+        // TODO continuar daqui.
+        wp_localize_script('payment-banking-slip-pix-for-lifterlms', 'bannerStrings', $bannerStrings);
     }
 }

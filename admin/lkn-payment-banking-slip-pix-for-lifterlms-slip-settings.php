@@ -54,8 +54,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'desc' => '<br>' . __( 'Defines the number of days until the Bank Slip expiration.', 'payment-banking-slip-pix-for-lifterlms' ),
                 'type' => 'number',
                 'default' => 1,
-                'step' => 1,
 				'min' => 0,
+                'step' => 1,
             );
             
             // Field for activate auto capture (Only pro version).
