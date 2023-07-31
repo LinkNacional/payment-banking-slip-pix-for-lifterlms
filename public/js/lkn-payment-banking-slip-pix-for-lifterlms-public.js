@@ -1,6 +1,10 @@
 (function ($) {
   'use strict'
 
+  // Load strings via wp_localize_script.
+  const SUCCESS = window.localizedStrings.success
+  const FAILURE = window.localizedStrings.failure
+
   // Function to copy emv code and slip code in payment area.
   $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip()
@@ -13,13 +17,13 @@
         .then(function () {
           buttonTitle.tooltip('dispose')
           buttonTitle.tooltip({
-            title: 'Código copiado'
+            title: SUCCESS
           }).tooltip('show')
         })
         .catch(function (error) {
           buttonTitle.tooltip('dispose')
           buttonTitle.tooltip({
-            title: 'Falha ao copiar código: ', error
+            title: FAILURE, error
           }).tooltip('show')
         })
     })

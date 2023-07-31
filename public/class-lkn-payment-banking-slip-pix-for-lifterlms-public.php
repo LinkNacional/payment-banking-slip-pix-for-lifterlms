@@ -86,6 +86,13 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public {
          * class.
          */
 
-        wp_enqueue_script( 'lkn-payment-banking-slip-pix-for-lifterlms', plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-public.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-payment-banking-slip-pix-for-lifterlms-public.js', array('jquery'), $this->version, false );
+    
+        $localizedStrings = array(
+            'success' => __('Code copied', 'payment-banking-slip-pix-for-lifterlms'),
+            'failure' => __('Fail on copy code: ', 'payment-banking-slip-pix-for-lifterlms')
+        );
+
+        wp_localize_script($this->plugin_name, 'localizedStrings', $localizedStrings);
     }
 }

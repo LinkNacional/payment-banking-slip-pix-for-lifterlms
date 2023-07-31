@@ -112,3 +112,9 @@ msgstr "Auto captura de pagamentos e atualização de pedidos"
 
 msgid "Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
 msgstr "Obtenha novas funcionalidades com %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
+
+msgid "Code copied"
+msgstr "Código copiado"
+
+msgid "Fail on copy code: "
+msgstr "Falha ao copiar código: "

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * php-cs-fixer config that follows the WordPress style guide for PHP.
+ * Source: https://gist.github.com/srbrunoferreira/5b0d96955c3913f6b1cd805c2a14079d
+ * Adapted from: https://github.com/vena/php-cs-fixer-wordpress/blob/main/src/WordPressRuleSet.php
+ * WordPress style guide: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/.
+ */
+
 return (new PhpCsFixer\Config())
     ->setRules(array(
         'short_scalar_cast' => true,
@@ -72,15 +79,21 @@ return (new PhpCsFixer\Config())
             'identical' => true,
             'always_move_variable' => true,
         ),
-
         'modernize_types_casting' => true,
         'final_class' => true,
         'final_internal_class' => true,
         'final_public_method_for_abstract_class' => true,
         'void_return' => true,
         'logical_operators' => true,
+        'array_indentation' => true,
+        'whitespace_after_comma_in_array' => array(
+            'ensure_single_space' => true,
+        ),
+        'method_argument_space' => array(
+            'keep_multiple_spaces_after_comma' => false,
+            'on_multiline' => 'ensure_fully_multiline',
+        ),
     ))
     ->setIndent('    ')
     ->setLineEnding("\n")
-    ->setRiskyAllowed(true)
-;
+    ->setRiskyAllowed(true);

@@ -112,3 +112,10 @@ msgstr ""
 
 msgid "Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s"
 msgstr ""
+
+msgid "Code copied"
+msgstr ""
+
+msgid "Fail on copy code: "
+msgstr ""
+
