@@ -151,46 +151,4 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
 
         return $configs;
     }
-
-    /**
-     * Catch the url of the current page.
-     *
-     * @since 1.0.0
-     *
-     * @return string $page_url
-     */
-    final public static function get_current_url() {
-        $page_url = 'http';
-        if ('on' === $_SERVER['HTTPS']) {
-            $page_url .= 's';
-        }
-        $page_url .= '://';
-        if ('80' !== $_SERVER['SERVER_PORT']) {
-            $page_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
-        } else {
-            $page_url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-        }
-
-        return sanitize_url($page_url);
-    }
-
-    /**
-     * Catch an number in the midle of bars.
-     *
-     * @since 1.0.0
-     *
-     * @param string $url
-     *
-     * @return int $number
-     */
-    final public static function get_number_in_url($url) {
-        $number = preg_match('/\/(\d+)\//', $url, $matches);
-        if (isset($matches[1])) {
-            $number = $matches[1];
-        } else {
-            return false;
-        }
-
-        return $number;
-    }
 }

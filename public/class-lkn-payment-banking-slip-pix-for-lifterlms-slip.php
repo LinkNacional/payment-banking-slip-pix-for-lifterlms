@@ -148,8 +148,7 @@ HTML;
                 // Verification of the gateway, to not execute in other gateways which has no defined this function.
                 if ($order->get( 'payment_gateway' ) === $this->id) {
                     // Getting orderId number.
-                    $currentUrl = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_current_url();
-                    $orderId = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_number_in_url($currentUrl);
+                    $orderId = $order->get('id');
 
                     // Getting obj $order from key.
                     $objOrder = llms_get_order_by_key('#' . $orderId);
@@ -264,20 +263,20 @@ HTML;
                 $this->log( 'Bank Slip Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
             }
 
-            // Pre validate CPF.
-            $cpf_info = $this->get_field_data();
+            // Pre validate CPF/CNPJ field.
+            $cpf_cnpj_info = $this->get_field_data();
 
             // Make error log.
-            if ( is_wp_error( $cpf_info ) ) {
+            if ( is_wp_error( $cpf_cnpj_info ) ) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', $cpf_info );
+                    $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', $cpf_cnpj_info );
                 }
 
-                return llms_add_notice( $cpf_info->get_error_message(), 'error' );
+                return llms_add_notice( $cpf_cnpj_info->get_error_message(), 'error' );
             }
 
-            // CPF field validation
-            if ($this->cpfValido($this->get_field_data()['lkn_cpf_cnpj_input_paghiper']) != true) {
+            // CPF/CNPJ field validation
+            if ($this->cpf_cnpj_valido($this->get_field_data()['lkn_cpf_cnpj_input_paghiper']) != true) {
                 return false;
             }
 
@@ -582,33 +581,103 @@ HTML;
         }
 
         /**
-         * Performs CPF validations.
+         * Performs CPF/CNPJ validations.
          *
          * @since 1.0.0
          *
-         * @param int|string $cpf The CPF for validade
+         * @param int|string $cpf_cnpj The CPF/CNPJ for validade
          *
          * @return bool|llms_notice
          */
-        protected function cpfValido($cpf) {
-            $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        protected function cpf_cnpj_valido($cpf_cnpj) {
+            $cpf_cnpj = preg_replace('/[^0-9]/', '', $cpf_cnpj);
 
-            if (strlen($cpf) != 11) {
-                return llms_add_notice( sprintf( __( 'Incorrect number of CPF digits: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+            $cpf_cnpj_len = strlen($cpf_cnpj);
+
+            if ($cpf_cnpj_len < 11 || $cpf_cnpj_len > 14) {
+                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
-            if (preg_match('/(\d)\1{10}/', $cpf)) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+            $cpf_equal_valid = 0;
+            $cnpj_equal_valid = 0;
+
+            if (11 == $cpf_cnpj_len) {
+                $cpf_equal_valid = preg_match('/(\d)\1{10}/', $cpf_cnpj);
+            } elseif (14 == $cpf_cnpj_len) {
+                if (
+                    ! is_numeric($cpf_cnpj) ||
+                    '00000000000000' == $cpf_cnpj ||
+                    '11111111111111' == $cpf_cnpj ||
+                    '22222222222222' == $cpf_cnpj ||
+                    '33333333333333' == $cpf_cnpj ||
+                    '44444444444444' == $cpf_cnpj ||
+                    '55555555555555' == $cpf_cnpj ||
+                    '66666666666666' == $cpf_cnpj ||
+                    '77777777777777' == $cpf_cnpj ||
+                    '88888888888888' == $cpf_cnpj ||
+                    '99999999999999' == $cpf_cnpj
+                ) {
+                    $cnpj_equal_valid = 1;
+                }
             }
 
-            for ($t = 9; $t < 11; ++$t) {
-                for ($d = 0, $c = 0; $c < $t; ++$c) {
-                    $d += $cpf[$c] * (($t + 1) - $c);
+            if ($cpf_equal_valid) {
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+            }
+
+            if ($cnpj_equal_valid) {
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+            }
+
+            if (11 == $cpf_cnpj_len) {
+                // Validate the CPF verify digits
+                for ($t = 9; $t < 11; ++$t) {
+                    for ($d = 0, $c = 0; $c < $t; ++$c) {
+                        $d += $cpf_cnpj[$c] * (($t + 1) - $c);
+                    }
+                    $d = ((10 * $d) % 11) % 10;
+                    if ($cpf_cnpj[$c] != $d) {
+                        return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    }
                 }
-                $d = ((10 * $d) % 11) % 10;
-                if ($cpf[$c] != $d) {
-                    return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+            } elseif (14 == $cpf_cnpj_len) {
+                // Validate the CNPJ verify digits
+                $tamanho = strlen($cpf_cnpj) - 2;
+                $numeros = substr($cpf_cnpj, 0, $tamanho);
+                $digitos = substr($cpf_cnpj, $tamanho);
+                $soma = 0;
+                $pos = $tamanho - 7;
+
+                for ($i = $tamanho; $i >= 1; $i--) {
+                    $soma += $numeros[$tamanho - $i] * $pos--;
+                    if ($pos < 2) {
+                        $pos = 9;
+                    }
                 }
+
+                $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
+                if ($resultado != $digitos[0]) {
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                }
+
+                $tamanho += 1;
+                $numeros = substr($cpf_cnpj, 0, $tamanho);
+                $soma = 0;
+                $pos = $tamanho - 7;
+
+                for ($i = $tamanho; $i >= 1; $i--) {
+                    $soma += $numeros[$tamanho - $i] * $pos--;
+                    if ($pos < 2) {
+                        $pos = 9;
+                    }
+                }
+
+                $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
+                if ($resultado != $digitos[1]) {
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                }
+            } else {
+                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             return true;

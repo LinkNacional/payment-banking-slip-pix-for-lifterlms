@@ -71,14 +71,23 @@ msgstr "Esse gateway não pode processar transações menores que R$ 3,00."
 msgid "Missing required field: CPF/CNPJ."
 msgstr "Campo obrigatório ausente: CPF/CNPJ."
 
-msgid "Incorrect number of CPF digits: "
-msgstr "Número incorreto de dígitos do CPF: "
+msgid "Incorrect number of CPF/CNPJ digits: "
+msgstr "Número incorreto de dígitos do CPF/CNPJ: "
 
 msgid "Incorrect and invalid CPF: "
 msgstr "CPF incorreto e invalido: "
 
+msgid "Incorrect and invalid CNPJ: "
+msgstr "CNPJ incorreto e invalido: "
+
 msgid "Invalid CPF: "
 msgstr "CPF invalido: "
+
+msgid "Invalid CNPJ: "
+msgstr "CNPJ invalido: "
+
+msgid "Invalid CPF/CNPJ: "
+msgstr "CPF/CNPJ invalido: "
 
 msgid "Copy slip code"
 msgstr "Copiar código boleto"
