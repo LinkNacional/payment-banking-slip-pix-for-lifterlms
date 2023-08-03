@@ -403,7 +403,7 @@ HTML;
             $requestResponse = $this->lkn_paghiper_pix_request($dataBody, $dataHeader, $url . 'invoice/create/');
 
             // Log request error if not success.
-            if ('success' != $requestResponse['pix_create_request']['result']) {
+            if ('success' !== $requestResponse['pix_create_request']['result']) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'Pix Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Pix');
                 }
@@ -413,7 +413,7 @@ HTML;
 
             // If request is success, save the important data for present in payment area.
             if (isset($requestResponse)) {
-                if ('reject' != $requestResponse['pix_create_request']['result']) {
+                if ('reject' !== $requestResponse['pix_create_request']['result']) {
                     $order->set('pix_qrcode_image', $requestResponse['pix_create_request']['pix_code']['qrcode_image_url']);
                     $order->set('pix_emv_code', $requestResponse['pix_create_request']['pix_code']['emv']);
                     $order->set('pix_transaction_id', $requestResponse['pix_create_request']['transaction_id']);

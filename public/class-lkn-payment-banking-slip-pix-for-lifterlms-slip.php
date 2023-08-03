@@ -425,7 +425,7 @@ HTML;
             $requestResponse = $this->lkn_paghiper_slip_request($dataBody, $dataHeader, $url . 'transaction/create/');
 
             // Log request error if not success.
-            if ('success' != $requestResponse['create_request']['result']) {
+            if ('success' !== $requestResponse['create_request']['result']) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'Bank Slip Gateway `handle_pending_order()` ended with api request errors', 'PagHiper - Bank Slip');
                 }
@@ -435,7 +435,7 @@ HTML;
 
             // If request is success, save the important data for present in payment area.
             if (isset($requestResponse)) {
-                if ('reject' != $requestResponse['create_request']['result']) {
+                if ('reject' !== $requestResponse['create_request']['result']) {
                     $order->set('slip_transaction_id', $requestResponse['create_request']['transaction_id']);
                     $order->set('slip_digitable_line', $requestResponse['create_request']['bank_slip']['digitable_line']);
                     $order->set('slip_url_slip', $requestResponse['create_request']['bank_slip']['url_slip']);
