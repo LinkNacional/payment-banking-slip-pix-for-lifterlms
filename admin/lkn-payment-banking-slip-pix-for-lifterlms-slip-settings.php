@@ -10,10 +10,8 @@ defined( 'ABSPATH' ) || exit;
 
 if (class_exists('LLMS_Payment_Gateway')) {
     final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip_Settings {
-        public static function set_settings() {
+        public static function slip_settings_fields($fields, $gateway_id) {
             $gateway = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms::get_gateways( 'bankSlip' );
-
-            $fields = array();
 
             // Field for Payment instructions.
             $fields[] = array(
@@ -54,7 +52,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'desc' => '<br>' . __( 'Defines the number of days until the Bank Slip expiration.', 'payment-banking-slip-pix-for-lifterlms' ),
                 'type' => 'number',
                 'default' => 1,
-				'min' => 0,
+                'min' => 0,
                 'step' => 1,
             );
             

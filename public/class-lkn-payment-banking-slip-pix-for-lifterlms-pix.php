@@ -53,7 +53,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
         public function __construct() {
             $this->set_variables();
 
-            add_filter( 'llms_get_gateway_settings_fields', array($this, 'pix_settings_fields'), 10, 2 );
+            require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
+            add_filter( 'llms_get_gateway_settings_fields', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings', 'pix_settings_fields'), 10, 2 );
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
@@ -67,28 +68,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
         public function enqueue_tooltip_scripts(): void {
             wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
             wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
-        }
-
-        /**
-         * Output custom settings fields on the LifterLMS Gateways Screen.
-         *
-         * @since 1.0.0
-         *
-         * @param array  $default_fields Array of existing fields
-         * @param string $gateway_id     Id of the gateway
-         *
-         * @return array
-         */
-        public function pix_settings_fields($default_fields, $gateway_id) {
-            if ( $this->id === $gateway_id ) {
-                require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
-
-                $fields = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings::set_settings();
-
-                $default_fields = array_merge( $default_fields, $fields );
-            }
-
-            return $default_fields;
         }
 
         /**
@@ -517,13 +496,13 @@ HTML;
         public function get_fields() {
             ob_start();
             llms_get_template(
-                'lkn-payment-banking-slip-pix-for-lifterlms-pix-checkout-fields.php',
+                'lkn-payment-banking-slip-pix-for-lifterlms-checkout-fields.php',
                 array(
                     'gateway' => $this,
                     'selected' => ( $this->get_id() === LLMS()->payment_gateways()->get_default_gateway() ),
                 ),
                 '',
-                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/'
+                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'public/partials/'
             );
 
             return apply_filters( 'llms_get_gateway_fields', ob_get_clean(), $this->id );

@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Add pix checkout fields.
+ * Add CPF/CNPJ checkout field.
  *
  * @see        https://www.linknacional.com/
  * @since      1.0.0
  */
 defined( 'ABSPATH' ) || exit;
 
-// The CPF / CNPJ field for pix gateway.
 llms_form_field(
     array(
         'columns' => 7,
