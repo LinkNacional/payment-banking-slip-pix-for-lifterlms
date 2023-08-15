@@ -10,8 +10,10 @@ defined( 'ABSPATH' ) || exit;
 
 if (class_exists('LLMS_Payment_Gateway')) {
     final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings {
-        public static function pix_settings_fields($fields, $gateway_id) {
+        public static function pix_settings_fields($default_fields, $gateway_id) {
             $gateway = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms::get_gateways( 'pix' );
+
+            $fields = array();
 
             // Field for Payment instructions.
             $fields[] = array(
@@ -66,7 +68,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'checkbox',
             );
 
-            return $fields;
+            if ($gateway->id == $gateway_id) {
+                $default_fields = array_merge($default_fields, $fields);
+            }
+
+            return $default_fields;
         }
     }
 }
