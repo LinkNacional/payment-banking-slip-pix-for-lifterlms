@@ -30,15 +30,13 @@ Payment Banking Slip Pix for LifterLMS plugin is dependent on [LifterLMS plugin]
 
 4. Look for the option 'Enable / Disable' and click on it, with this the payment method will be active;
 
-5. Look for the options 'Api Key' and 'Token Key' and fill them with your PagHiper credentials; 
+5. Look for the fields 'Api Key' and 'Token Key' and type your PagHiper credentials; 
 
 6. Configure the rest of the payment method according to your needs;
 
 7. Then, click on the 'Save Changes' button at the top right of page;
 
-8. Click on the 'Save changes' button;
-
-9. Repeat the same steps for other payment methods.
+8. Repeat the same steps for other payment methods.
 
 The Payment Banking Slip Pix for LifterLMS is now live and working.
 

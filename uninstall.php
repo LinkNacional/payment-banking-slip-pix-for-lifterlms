@@ -27,3 +27,11 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
+
+// Clear Token and Api keys of bank slip
+update_option('llms_gateway_bankSlip_api_key', '');
+update_option('llms_gateway_bankSlip_token_key', '');
+
+// Clear Token and Api keys of pix
+update_option('llms_gateway_pix_api_key', '');
+update_option('llms_gateway_pix_token_key', '');

@@ -1,4 +1,47 @@
-# Payment Banking Slip Pix for LifterLMS
+# Documentação em Português: Payment Banking Slip Pix for LifterLMS
+
+O [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpress/plugins/) é um plugin extensão para o LifterLMS, que ativa pagamentos por boleto bancário e pix.
+
+## Dependencias
+
+O plugin Payment Banking Slip Pix for LifterLMS é dependente da ativação do plugin LifterLMS, por favor, tenha certeza de que ele esteja instalado e apropriadamente configurado antes de iniciar a instalação do Payment Banking Slip Pix for LifterLMS.
+
+## Instalação
+
+1) Na sidebar do Wordpress, procure pela opção "Plugins" e selecione-a;
+
+2) Aperte o botão "Adicionar novo" ao lado do título "Plugins" no topo da página;
+
+3) Aperte o botão "Enviar Plugin" ao lado do título "Instalar Plugins" no topo da página. Irá aparecer novas opções no centro da tela, selecione "Procurar...", busque pelo arquivo do plugin (payment-banking-slip-pix-for-lifterlms.zip) e o envie;
+
+4) Aperte o botão "Instalar agora", em seguida ative o plugin instalado;
+
+Ao terminar esses passos, o Payment Banking Slip Pix for LifterLMS estára ativado e pronto para ser configurado.
+
+## Instruções de uso
+
+1) Agora, na sidebar do Wordpress, vá até o menu de configurações do LifterLMS;
+
+2) Selecione a opção "Caixa" (Checkout);
+
+3) Logo abaixo, ao lado da opção "Configurações Checkout", estão os métodos de pagamento, selecione um;
+
+4) Procure a opção "Ativar / Desativar" e clique nela, com isso o método de pagamento será ativado;
+
+5) Procure pelos campos "Api Key" e "Token Key", e digite suas credencias da PagHiper;
+
+6) Configure o restante do método de pagamento de acordo com suas necessidades;
+
+7) Então, clique no botão "Salvar Alterações" no canto superior direito da página;
+
+8) Repita os mesmos passos para os outros métodos de pagamentos.
+
+Agora o Payment Banking Slip Pix for LifterLMS estará ativo e funcionando.
+
+<br>
+<!-- DIVISORIA PARA DOCUMENTAÇÃO EM INGLÊS -->
+
+# Documentation in English: Payment Banking Slip Pix for LifterLMS
 
 The [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpress/plugins/) is an extension plugin for LifterLMS which enables the bank slip and pix payment.
 
@@ -28,14 +71,12 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 
 4) Look for the option 'Enable / Disable' and click on it, with this the payment method will be active;
 
-5) Look for the options 'Api Key' and 'Token Key' and fill them with your PagHiper credentials; 
+5) Look for the fields 'Api Key' and 'Token Key' and type your PagHiper credentials; 
 
 6) Configure the rest of the payment method according to your needs;
 
 7) Then, click on the 'Save Changes' button at the top right of page;
 
-8) Click on the 'Save changes' button;
-
-9) Repeat the same steps for other payment methods.
+8) Repeat the same steps for other payment methods.
 
 The Payment Banking Slip Pix for LifterLMS is now live and working.
