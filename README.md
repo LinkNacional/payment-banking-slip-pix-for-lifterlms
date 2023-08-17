@@ -9,30 +9,44 @@ O plugin Payment Banking Slip Pix for LifterLMS é dependente da ativação do p
 ## Instalação
 
 1) Na sidebar do Wordpress, procure pela opção "Plugins" e selecione-a;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/06117095-77a0-4ebb-b527-9e695d92ceaa" height="250" width="auto" alt="Inst1">
+</p>
 
 2) Aperte o botão "Adicionar novo" ao lado do título "Plugins" no topo da página;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/63879bc6-6083-4a56-af35-a1e77d761ec5" height="250" width="auto" alt="Inst2">
+</p>
 
 3) Aperte o botão "Enviar Plugin" ao lado do título "Instalar Plugins" no topo da página. Irá aparecer novas opções no centro da tela, selecione "Procurar...", busque pelo arquivo do plugin (payment-banking-slip-pix-for-lifterlms.zip) e o envie;
 
 4) Aperte o botão "Instalar agora", em seguida ative o plugin instalado;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/479948e6-b47b-4973-9021-e3618f404c94" height="250" width="auto" alt="Inst3">
+</p>
 
 Ao terminar esses passos, o Payment Banking Slip Pix for LifterLMS estára ativado e pronto para ser configurado.
 
 ## Instruções de uso
 
 1) Agora, na sidebar do Wordpress, vá até o menu de configurações do LifterLMS;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/cd1d9529-9d79-4491-b7bb-891b34cfb464" height="250" width="auto" alt="Inst4">
+</p>
 
 2) Selecione a opção "Caixa" (Checkout);
 
 3) Logo abaixo, ao lado da opção "Configurações Checkout", estão os métodos de pagamento, selecione um;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/4145fb42-8282-461e-b497-a71507fa3bbc" height="250" width="auto" alt="Inst5">
+</p>
 
 4) Procure a opção "Ativar / Desativar" e clique nela, com isso o método de pagamento será ativado;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/767fc8b9-4f4b-48da-84b2-3c5268b2540f" height="250" width="auto" alt="Inst6">
+</p>
 
 5) Procure pelos campos "Api Key" e "Token Key", e digite suas credencias da PagHiper;
 
 6) Configure o restante do método de pagamento de acordo com suas necessidades;
 
 7) Então, clique no botão "Salvar Alterações" no canto superior direito da página;
+<p align="start"><img src="https://github.com/LinkNacional/payment-banking-slip-pix-for-lifterlms/assets/127407085/3284dac5-e2d8-41ab-943e-0ea4ac9766a2" height="250" width="auto" alt="Inst7">
+</p>
 
 8) Repita os mesmos passos para os outros métodos de pagamentos.
 
