@@ -94,14 +94,14 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     final public static function dependency_notice(): void {
         // Admin notice.
         $message = sprintf(
-            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s</p></div>',
             __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
             __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
             'https://lifterlms.com',
             __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
             __('version', 'payment-banking-slip-pix-for-lifterlms'),
             LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION,
-            __('for the Payment Banking Slip Pix for LifterLMS to activate', 'payment-banking-slip-pix-for-lifterlms')
+            __('for the Payment Banking Slip Pix for LifterLMS to activate.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
         echo $message;
@@ -115,12 +115,12 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     final public static function inactive_notice(): void {
         // Admin notice.
         $message = sprintf(
-            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s</p></div>',
             __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
             __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
             'https://lifterlms.com',
             __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
-            __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS', 'payment-banking-slip-pix-for-lifterlms')
+            __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
         echo $message;
