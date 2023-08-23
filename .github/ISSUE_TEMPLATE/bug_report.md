@@ -3,7 +3,6 @@ Uma descrição clara e concisa do que é o bug.
 
 ## Informação do sistema
 - PHP: [ex. 8.1]
-- WHMCS: [ex. 8.6.1]
 - WordPress: [ex. 6.1]
 
 ## Passos para reproduzir

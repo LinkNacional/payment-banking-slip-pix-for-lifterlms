@@ -9,7 +9,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function get_llms_version() {
         $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
@@ -23,7 +23,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Show plugin dependency notice.
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function verify_plugin_dependencies(): void {
         // Load plugin helper functions.
@@ -36,35 +36,44 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
 
         $lkn_pay_bank_for_lifterLMS_path = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE;
 
-        $is_installed = false;
+        // Flags to decide the plugin activation.
+        $dependency_is_installed = false;
+        $dependency_is_activeted = false;
 
-        // Check if the LifterLMS plugin is installed and activated.
-        if (function_exists('get_plugins')) {
-            $all_plugins = get_plugins();
-            $is_installed = ! empty($all_plugins['lifterlms/lifterlms.php']);
+        // Set the path of dir/file of dependency plugin.
+        $lifterLMS_path = 'lifterlms/lifterlms.php';
 
-            $all_activateds = get_option( 'active_plugins' );
-            $activeted_plugin = in_array('lifterlms/lifterlms.php', $all_activateds, true);
+        // Define LifterLMS plugin status.
+        if (is_plugin_active($lifterLMS_path)) {
+            $dependency_is_installed = true;
+            $dependency_is_activeted = true;
+        } elseif (is_plugin_inactive($lifterLMS_path)) {
+            $dependency_is_installed = true;
+            $dependency_is_activeted = false;
+        } elseif ( ! is_plugin_active($lifterLMS_path) && is_plugin_inactive($lifterLMS_path)) {
+            $dependency_is_installed = false;
+            $dependency_is_activeted = false;
         }
 
-        // Check the minimum version of LifterLMS and if it is enabled.
-        if ($is_installed) {
+        // Check if the LifterLMS is installed, activated, or on unsupported version.
+        if ($dependency_is_installed) {
+            require_once ABSPATH . '/wp-content/plugins/lifterlms/lifterlms.php';
             $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
 
-            require_once ABSPATH . '/wp-content/plugins/lifterlms/lifterlms.php';
-
-            if ($activeted_plugin && version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')) {
-                $is_deactivate_plugin = true;
-                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
-            } elseif ($activeted_plugin && version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '>')) {
-                $is_deactivate_plugin = false;
-            } elseif ( ! $activeted_plugin) {
+            if ($dependency_is_activeted) {
+                if (version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')) {
+                    $is_deactivate_plugin = true;
+                    Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
+                } else {
+                    $is_deactivate_plugin = false;
+                }
+            } elseif ( ! $dependency_is_activeted) {
                 $is_deactivate_plugin = true;
                 Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
             }
-        } elseif ( ! $is_installed) {
+        } elseif ( ! $dependency_is_installed) {
             $is_deactivate_plugin = true;
-            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
+            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
         }
 
         // Deactivate plugin.
@@ -80,11 +89,9 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Notice for lifterLMS dependecy.
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function dependency_notice(): void {
-        $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
-
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
@@ -93,7 +100,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
             'https://lifterlms.com',
             __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
             __('version', 'payment-banking-slip-pix-for-lifterlms'),
-            $LLMS_VERSION,
+            LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION,
             __('for the Payment Banking Slip Pix for LifterLMS to activate', 'payment-banking-slip-pix-for-lifterlms')
         );
 
@@ -103,7 +110,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Notice for No Core Activation.
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function inactive_notice(): void {
         // Admin notice.

@@ -132,6 +132,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         if ($activeted_plugin) {
             add_filter( 'lifterlms_payment_gateways', array($this, 'add_gateways') );
         } else {
+            // Load plugin helper functions.
+            if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
+                require_once ABSPATH . '/wp-admin/includes/plugin.php';
+            }
             deactivate_plugins(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE);
             if (isset($_GET['activate'])) {
                 unset($_GET['activate']);
