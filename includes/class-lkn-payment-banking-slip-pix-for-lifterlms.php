@@ -73,7 +73,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::verify_plugin_dependencies();
         $this->init_gateways();
     }
 
@@ -250,6 +249,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999);
     }
 
     /**

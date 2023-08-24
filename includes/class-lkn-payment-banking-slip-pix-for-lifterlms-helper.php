@@ -7,83 +7,55 @@
  */
 final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
-     * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
-     *
-     * @since 1.0.0
-     */
-    final public static function get_llms_version() {
-        $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
-        $plugin_data = get_plugin_data($pluginPath);
-
-        if ($plugin_data) {
-            return $plugin_data['Version'];
-        }
-    }
-
-    /**
      * Show plugin dependency notice.
      *
      * @since 1.0.0
      */
-    final public static function verify_plugin_dependencies(): void {
+    final public static function verify_plugin_dependencies(): bool {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
         }
-
+        
         // Flag to check whether deactivate plugin or not.
         $is_deactivate_plugin = null;
 
-        $lkn_pay_bank_for_lifterLMS_path = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE;
+        // Verify minimum LifterLMS plugin version.
+        if (
+            defined('LLMS_VERSION')
+            && version_compare(LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')
+        ) {
+            // Show admin notice.
+            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
 
-        // Flags to decide the plugin activation.
-        $dependency_is_installed = false;
-        $dependency_is_activeted = false;
-
-        // Set the path of dir/file of dependency plugin.
-        $lifterLMS_path = 'lifterlms/lifterlms.php';
-
-        // Define LifterLMS plugin status.
-        if (is_plugin_active($lifterLMS_path)) {
-            $dependency_is_installed = true;
-            $dependency_is_activeted = true;
-        } elseif (is_plugin_inactive($lifterLMS_path)) {
-            $dependency_is_installed = true;
-            $dependency_is_activeted = false;
-        } elseif ( ! is_plugin_active($lifterLMS_path) && is_plugin_inactive($lifterLMS_path)) {
-            $dependency_is_installed = false;
-            $dependency_is_activeted = false;
-        }
-
-        // Check if the LifterLMS is installed, activated, or on unsupported version.
-        if ($dependency_is_installed) {
-            require_once ABSPATH . '/wp-content/plugins/lifterlms/lifterlms.php';
-            $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
-
-            if ($dependency_is_activeted) {
-                if (version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')) {
-                    $is_deactivate_plugin = true;
-                    Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
-                } else {
-                    $is_deactivate_plugin = false;
-                }
-            } elseif ( ! $dependency_is_activeted) {
-                $is_deactivate_plugin = true;
-                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
-            }
-        } elseif ( ! $dependency_is_installed) {
             $is_deactivate_plugin = true;
+        }
+        
+        // LifterLMS don't have BASENAME constant.
+        $LLMS_BASENAME = defined('LLMS_PLUGIN_FILE') ? plugin_basename(LLMS_PLUGIN_FILE) : '';
+
+        $is_Lifter_active = ('' !== $LLMS_BASENAME) ? is_plugin_active($LLMS_BASENAME) : false;
+
+        // Verify if LifterLMS plugin is actived.
+        if ( ! $is_Lifter_active) {
+            // Show admin notice.
             Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
+
+            $is_deactivate_plugin = true;
         }
 
         // Deactivate plugin.
         if ($is_deactivate_plugin) {
-            deactivate_plugins($lkn_pay_bank_for_lifterLMS_path);
+            deactivate_plugins(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME);
 
             if (isset($_GET['activate'])) {
                 unset($_GET['activate']);
             }
+
+            return false;
         }
+
+        return true;
     }
 
     /**
