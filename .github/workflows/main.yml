@@ -18,29 +18,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    # Add plugin files to a root directory
-    - name: Make plugin root directory with auto-updater
-      run: "mkdir ${{env.PLUGIN_NAME_WITH_UPDATER}} && cp -r ./admin ./includes ./languages ./public *.php LICENSE composer.json composer.lock ./${{env.PLUGIN_NAME_WITH_UPDATER}}/ && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type d -exec chmod 0755 {} + && ls -lah"
-
-    - name: Make plugin root directory
-      run: "rm -Rf ./includes/plugin-updater && mkdir ${{env.PLUGIN_NAME}} && mv -t ./${{env.PLUGIN_NAME}} ./admin ./includes ./languages ./public *.php LICENSE composer.json composer.lock *.txt && find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME}} -type d -exec chmod 0755 {} + && ls -lah"
-
     # Run composer install
     - name: Run composer install
       uses: php-actions/composer@v6
       with:
         php_version: ${{ env.PHP_VERSION }}
-        working_dir: ${{env.PLUGIN_NAME_WITH_UPDATER}}
+        working_dir: "."
         args: --ignore-platform-reqs
         command: install
 
-    - name: Run composer install
-      uses: php-actions/composer@v6
-      with:
-        php_version: ${{ env.PHP_VERSION }}
-        working_dir: ${{env.PLUGIN_NAME}}
-        args: --ignore-platform-reqs
-        command: install
+    # Add plugin files to a root directory
+    - name: Make plugin root directory with auto-updater
+      run: "mkdir ${{env.PLUGIN_NAME_WITH_UPDATER}} && cp -r ./admin ./includes ./languages ./public ./vendor *.php LICENSE composer.json composer.lock ./${{env.PLUGIN_NAME_WITH_UPDATER}}/ && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type d -exec chmod 0755 {} + && ls -lah"
+
+    - name: Make plugin root directory
+      run: "rm -Rf ./includes/plugin-updater && mkdir ${{env.PLUGIN_NAME}} && mv -t ./${{env.PLUGIN_NAME}} ./admin ./includes ./languages ./public ./vendor *.php LICENSE composer.json composer.lock *.txt && find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME}} -type d -exec chmod 0755 {} + && ls -lah"
 
     # Compact plugin as .zip
     - name: Archive Release

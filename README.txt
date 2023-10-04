@@ -73,10 +73,14 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 
 = 1.0.0 =
 **04/10/2023**
-* Plugin launch.
+* Plugin launch;
+* Add payment method Pix using PagHiper API;
+* Add payment method Bank slip using PagHiper API.
 
 == Upgrade Notice ==
 
 = 1.0.0 =
 **04/10/2023**
-* Plugin launch.
+* Plugin launch;
+* Add payment method Pix using PagHiper API;
+* Add payment method Bank slip using PagHiper API.
