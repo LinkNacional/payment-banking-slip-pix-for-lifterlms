@@ -18,11 +18,19 @@
  */
 final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator {
     /**
+     * Constructor.
+     *
+     * @since   1.0.0
+     */
+    public function __construct() {
+    }
+
+    /**
      * Short Description. (use period).
      *
      * Long Description.
      *
-     * @since    1.0.0
+     * @since   1.0.0
      */
     public static function activate(): void {
     }

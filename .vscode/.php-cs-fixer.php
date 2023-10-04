@@ -9,12 +9,10 @@
 
 return (new PhpCsFixer\Config())
     ->setRules(array(
-        // Built-ins
         'short_scalar_cast' => true,
         'visibility_required' => true,
         'elseif' => true,
         'no_superfluous_elseif' => true,
-        '@PhpCsFixer' => true,
         'align_multiline_comment' => array('comment_type' => 'phpdocs_like'),
         'array_syntax' => array('syntax' => 'long'),
         'binary_operator_spaces' => true,
@@ -81,15 +79,21 @@ return (new PhpCsFixer\Config())
             'identical' => true,
             'always_move_variable' => true,
         ),
-
         'modernize_types_casting' => true,
         'final_class' => true,
         'final_internal_class' => true,
         'final_public_method_for_abstract_class' => true,
         'void_return' => true,
         'logical_operators' => true,
+        'array_indentation' => true,
+        'whitespace_after_comma_in_array' => array(
+            'ensure_single_space' => true,
+        ),
+        'method_argument_space' => array(
+            'keep_multiple_spaces_after_comma' => false,
+            'on_multiline' => 'ensure_fully_multiline',
+        ),
     ))
     ->setIndent('    ')
     ->setLineEnding("\n")
-    ->setRiskyAllowed(true)
-;
+    ->setRiskyAllowed(true);

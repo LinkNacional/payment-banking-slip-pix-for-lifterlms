@@ -3,99 +3,77 @@
 /**
  * @see        https://www.linknacional.com/
  * @since      1.0.0
- *
  * @author     Link Nacional
  */
 final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
-     * Get the LifterLMS version (LifterLMS doesn't have an global variable for this).
-     *
-     * @since
-     */
-    final public static function get_llms_version() {
-        $pluginPath = ABSPATH . 'wp-content/plugins/lifterlms/lifterlms.php';
-        $plugin_data = get_plugin_data($pluginPath);
-
-        if ($plugin_data) {
-            return $plugin_data['Version'];
-        }
-    }
-
-    /**
      * Show plugin dependency notice.
      *
-     * @since
+     * @since 1.0.0
      */
-    final public static function verify_plugin_dependencies(): void {
+    final public static function verify_plugin_dependencies(): bool {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
         }
-
+        
         // Flag to check whether deactivate plugin or not.
         $is_deactivate_plugin = null;
 
-        $lkn_pay_bank_for_lifterLMS_path = ABSPATH . '/wp-content/plugins/payment-banking-slip-pix-for-lifterlms/lkn-payment-banking-slip-pix-for-lifterlms.php';
-
-        $is_installed = false;
-
-        // Check if the LifterLMS plugin is installed and activated.
-        if (function_exists('get_plugins')) {
-            $all_plugins = get_plugins();
-            $is_installed = ! empty($all_plugins['lifterlms/lifterlms.php']);
-
-            $all_activateds = get_option( 'active_plugins' );
-            $activeted_plugin = in_array('lifterlms/lifterlms.php', $all_activateds, true);
-        }
-
-        // Check the minimum version of LifterLMS and if it is enabled.
-        if ($is_installed) {
-            $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
-
-            require_once ABSPATH . '/wp-content/plugins/lifterlms/lifterlms.php';
-
-            if ($activeted_plugin && version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')) {
-                $is_deactivate_plugin = true;
-                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
-            } elseif ($activeted_plugin && version_compare($LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '>')) {
-                $is_deactivate_plugin = false;
-            } elseif ( ! $activeted_plugin) {
-                $is_deactivate_plugin = true;
-                Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
-            }
-        } elseif ( ! $is_installed) {
-            $is_deactivate_plugin = true;
+        // Verify minimum LifterLMS plugin version.
+        if (
+            defined('LLMS_VERSION')
+            && version_compare(LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')
+        ) {
+            // Show admin notice.
             Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
+
+            $is_deactivate_plugin = true;
+        }
+        
+        // LifterLMS don't have BASENAME constant.
+        $LLMS_BASENAME = defined('LLMS_PLUGIN_FILE') ? plugin_basename(LLMS_PLUGIN_FILE) : '';
+
+        $is_Lifter_active = ('' !== $LLMS_BASENAME) ? is_plugin_active($LLMS_BASENAME) : false;
+
+        // Verify if LifterLMS plugin is actived.
+        if ( ! $is_Lifter_active) {
+            // Show admin notice.
+            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
+
+            $is_deactivate_plugin = true;
         }
 
         // Deactivate plugin.
         if ($is_deactivate_plugin) {
-            deactivate_plugins($lkn_pay_bank_for_lifterLMS_path);
+            deactivate_plugins(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME);
 
             if (isset($_GET['activate'])) {
                 unset($_GET['activate']);
             }
+
+            return false;
         }
+
+        return true;
     }
 
     /**
      * Notice for lifterLMS dependecy.
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function dependency_notice(): void {
-        $LLMS_VERSION = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_llms_version();
-
         // Admin notice.
         $message = sprintf(
-            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s</p></div>',
             __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
             __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
             'https://lifterlms.com',
             __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
             __('version', 'payment-banking-slip-pix-for-lifterlms'),
-            $LLMS_VERSION,
-            __('for the Payment Banking Slip Pix for LifterLMS to activate', 'payment-banking-slip-pix-for-lifterlms')
+            LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION,
+            __('for the Payment Banking Slip Pix for LifterLMS to activate.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
         echo $message;
@@ -104,17 +82,17 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Notice for No Core Activation.
      *
-     * @since
+     * @since 1.0.0
      */
     final public static function inactive_notice(): void {
         // Admin notice.
         $message = sprintf(
-            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
+            '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s</p></div>',
             __('Activation Error:', 'payment-banking-slip-pix-for-lifterlms'),
             __('You must have', 'payment-banking-slip-pix-for-lifterlms'),
             'https://lifterlms.com',
             __('LifterLMS', 'payment-banking-slip-pix-for-lifterlms'),
-            __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS', 'payment-banking-slip-pix-for-lifterlms')
+            __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
         echo $message;
@@ -126,5 +104,43 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
 
     final public static function inactive_alert(): void {
         add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
+    }
+
+    /**
+     * Array for pick the data of the gateways settings in LifterLMS.
+     *
+     * @since 1.0.0
+     *
+     * @param string $gateway_id
+     * @return array $configs
+     */
+    final public static function get_configs($gateway_id) {
+        $configs = array();
+
+        $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
+        $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . date('d.m.Y-H.i.s') . '.log';
+
+        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
+        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
+        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+
+        $configs['urlPix'] = 'https://pix.paghiper.com/';
+        $configs['urlSlip'] = 'https://api.paghiper.com/';
+
+        return $configs;
+    }
+
+    /**
+     * Returns an instance of an gateway.
+     *
+     * @since 1.0.0
+     *
+     * @param string $gateway_id
+     *
+     * @return object gateway
+     */
+    public static function get_gateways($gateway_id) {
+        return llms()->payment_gateways()->get_gateway_by_id( $gateway_id );
     }
 }

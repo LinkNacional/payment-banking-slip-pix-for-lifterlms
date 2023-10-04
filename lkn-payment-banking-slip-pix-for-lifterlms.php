@@ -31,12 +31,9 @@ if ( ! defined( 'WPINC' ) ) {
 
 /*
  * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
  */
 define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_VERSION', '1.0.0' );
 
-// TODO Versão minima provisória
 define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION', '7.1.4' );
 
 define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE', __FILE__ );
@@ -47,7 +44,7 @@ define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR', plugin_dir_path(LKN_PA
 
 define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_URL', plugin_dir_url(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE) );
 
-define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME', plugin_basename(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_SLUG) );
+define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME', plugin_basename(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE) );
 
 /**
  * The code that runs during plugin activation.
