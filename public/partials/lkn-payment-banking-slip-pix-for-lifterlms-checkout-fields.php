@@ -23,6 +23,6 @@ llms_form_field(
         'aria-required' => true,
         'onfocus' => 'javascript: retirarFormatacao(this);',
         'onblur' => 'javascript: formatarCampo(this);',
-        'max_length' => 19,
+        'max_length' => 19
     )
 );

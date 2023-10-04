@@ -52,6 +52,26 @@ Ao terminar esses passos, o Payment Banking Slip Pix for LifterLMS estára ativa
 
 Agora o Payment Banking Slip Pix for LifterLMS estará ativo e funcionando.
 
+## Notas de desenvolvimento
+
+### Documentações para o desenvolvimento
+
+- Wordpress Plugin Development: <https://developer.wordpress.org/plugins/>
+- LifterLMS: <https://github.com/gocodebox/lifterlms>
+
+### Integração com PagHiper API
+
+- Referência API Pix: <https://dev.paghiper.com/reference/emissao-de-pix-paghiper>
+- Referência API Boleto: <https://dev.paghiper.com/reference/gerar-boleto>
+
+### Estrutura de pastas
+
+- `/admin/`: contém os arquivo onde são executadas as funções para o lado administrativo do plugin, que consiste na definição das configurações dos gateways de pagamento.
+- `/includes/`: contém diversos arquivos responsáveis pelo funcionamento do plugin.
+- `/public/`: contém os arquivos onde são executadas as funções para o lado público do plugin, como estilização, entre outras. E também os arquivos responsáveis pelo funcionamento dos gateways, como apresentação da área de pagamento, mudança de forma de pagamento, criação e processamento de pedido, entre outras.
+- `/public/partials/`: contém o arquivo responsável por novos campos a serem inseridos no formulário de pedido.
+
+
 <br>
 <!-- DIVISORIA PARA DOCUMENTAÇÃO EM INGLÊS -->
 

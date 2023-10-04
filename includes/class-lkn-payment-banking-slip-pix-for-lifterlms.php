@@ -73,7 +73,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        $this->init_gateways();
     }
 
     /**
@@ -117,30 +116,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      */
     public function get_version() {
         return $this->version;
-    }
-
-    /**
-     * Add the bank slip and pix gateways in LifterLMS available gateways.
-     * 
-     * @since 1.0.0
-     */
-    public function init_gateways(): void {
-        $all_activateds = get_option( 'active_plugins' );
-        $activeted_plugin = in_array('lifterlms/lifterlms.php', $all_activateds, true);
-
-        if ($activeted_plugin) {
-            add_filter( 'lifterlms_payment_gateways', array($this, 'add_gateways') );
-        } else {
-            // Load plugin helper functions.
-            if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
-                require_once ABSPATH . '/wp-admin/includes/plugin.php';
-            }
-            deactivate_plugins(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE);
-            if (isset($_GET['activate'])) {
-                unset($_GET['activate']);
-            }
-        }
-    }
+    }        
 
     /**
      * Add the PagHiper Payment gateways to the list of available gateways.
@@ -154,17 +130,16 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
         return $gateways;
     }
 
-    /**
-     * Returns an instance of an gateway.
-     *
-     * @since 1.0.0
-     *
-     * @param string $gateway_id
-     *
-     * @return object gateway
-     */
-    public static function get_gateways($gateway_id) {
-        return llms()->payment_gateways()->get_gateway_by_id( $gateway_id );
+    public function updater_init(): ?object {
+        if (class_exists('Lkn_Puc_Plugin_UpdateChecker')) {
+            return new Lkn_Puc_Plugin_UpdateChecker(
+                'https://api.linknacional.com.br/v2/u/?slug=payment-banking-slip-pix-for-lifterlms',
+                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE,
+                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_SLUG
+            );
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -221,6 +196,11 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
          */
         require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-payment-banking-slip-pix-for-lifterlms-slip.php';
 
+        /**
+         * The class responsible for plugin updater checker of plugin.
+         */
+        include_once plugin_dir_path( __DIR__ ) . 'includes/plugin-updater/plugin-update-checker.php';
+
         $this->loader = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader();
     }
 
@@ -247,9 +227,9 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
     private function define_admin_hooks(): void {
         $plugin_admin = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin( $this->get_plugin_name(), $this->get_version() );
 
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-        $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999);
+        $this->loader->add_action('init', $this, 'updater_init');
+        $this->loader->add_action( 'plugins_loaded', 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999 );
     }
 
     /**
@@ -263,5 +243,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+        $this->loader->add_filter( 'lifterlms_payment_gateways', $this, 'add_gateways' );
     }
 }

@@ -30,34 +30,34 @@
   })
 
   $(window).on('load', () => {
-    let cpf_cnpj_input = $('input#lkn_cpf_cnpj_input_paghiper')
-    
-    cpf_cnpj_input.attr({
+    const cpfCnpjInput = $('input#lkn_cpf_cnpj_input_paghiper')
+
+    cpfCnpjInput.attr({
       autocomplete: 'off',
-      'aria-required': true,
+      'aria-required': true
     })
 
-    cpf_cnpj_input.focus(function() {
+    cpfCnpjInput.focus(function () {
       retirarFormatacao(this)
-    });
+    })
 
-    cpf_cnpj_input.blur(function() {
+    cpfCnpjInput.blur(function () {
       retirarFormatacao(this)
       formatarCampo(this)
-    });
+    })
   })
-  
+
   // Remove unwanted characters.
-  function retirarFormatacao(campoTexto){
+  function retirarFormatacao (campoTexto) {
     campoTexto.value = campoTexto.value.replace(/[.\-/]/g, '')
   }
 
   // Formating CPF/CNPJ field.
   function formatarCampo (campoTexto) {
     if (campoTexto.value.length <= 11) {
-    campoTexto.value = mascaraCpf(campoTexto.value)
+      campoTexto.value = mascaraCpf(campoTexto.value)
     } else {
-    campoTexto.value = mascaraCnpj(campoTexto.value)
+      campoTexto.value = mascaraCnpj(campoTexto.value)
     }
   }
 

@@ -163,7 +163,6 @@ HTML;
                         <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
                         </div>
                     </div>
-
 HTML;
 
                     // Below is the verification of payment of the order, to present or not the Payment Area.
@@ -287,7 +286,7 @@ HTML;
                             'transaction_id' => uniqid(),
                             'status' => 'llms-txn-succeeded',
                             'payment_gateway' => 'bankSlip',
-                            'payment_type' => 'single',
+                            'payment_type' => 'single'
                         )
                     );
                 }
@@ -384,9 +383,9 @@ HTML;
                         'description' => $itemDesc,
                         'quantity' => $itemQtd,
                         'item_id' => $itemId,
-                        'price_cents' => $itemPriceCents,
-                    ),
-                ),
+                        'price_cents' => $itemPriceCents
+                    )
+                )
             );
 
             // Header
@@ -394,7 +393,7 @@ HTML;
                 'Accept' => $mediaType,
                 'Accept-Charset' => $charSet,
                 'Accept-Encoding' => $mediaType,
-                'Content-Type' => $mediaType . ';charset=' . $charSet,
+                'Content-Type' => $mediaType . ';charset=' . $charSet
             );
 
             // Reset the order_key of obj $order for further search.
@@ -447,7 +446,7 @@ HTML;
                     'body' => json_encode($dataBody),
                     'timeout' => '10',
                     'redirection' => '5',
-                    'httpversion' => '1.0',
+                    'httpversion' => '1.0'
                 );
 
                 // Make the request.
@@ -523,7 +522,7 @@ HTML;
                 'lkn-payment-banking-slip-pix-for-lifterlms-checkout-fields.php',
                 array(
                     'gateway' => $this,
-                    'selected' => ( $this->get_id() === LLMS()->payment_gateways()->get_default_gateway() ),
+                    'selected' => ( $this->get_id() === LLMS()->payment_gateways()->get_default_gateway() )
                 ),
                 '',
                 LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'public/partials/'
@@ -703,14 +702,14 @@ HTML;
                 'refunds' => false, // Significa que compras feitas com esse gateway podem ser reembolsadas, porém, esse gateway não funciona como um método de reembolso.
                 'single_payments' => true,
                 'recurring_payments' => true,
-                'test_mode' => false,
+                'test_mode' => false
             );
 
             $this->admin_order_fields = wp_parse_args(
                 array(
                     'customer' => true,
                     'source' => true,
-                    'subscription' => false,
+                    'subscription' => false
                 ),
                 $this->admin_order_fields
             );

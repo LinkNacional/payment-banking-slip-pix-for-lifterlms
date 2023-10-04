@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 if (class_exists('LLMS_Payment_Gateway')) {
     final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip_Settings {
         public static function slip_settings_fields($default_fields, $gateway_id) {
-            $gateway = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms::get_gateways( 'bankSlip' );
+            $gateway = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_gateways( 'bankSlip' );
 
             $fields = array();
 
@@ -20,7 +20,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'id' => $gateway->get_option_name( 'payment_instructions' ),
                 'desc' => '<br>' . __( 'Displayed to the user when this gateway is selected during checkout. Add information here instructing the student on how to send payment.', 'lifterlms' ),
                 'title' => __( 'Payment Instructions', 'lifterlms' ),
-                'type' => 'textarea',
+                'type' => 'textarea'
             );
 
             // Field for PagHiper API Key.
@@ -32,7 +32,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     '<a href="https://dev.paghiper.com/reference/pr%C3%A9-requisitos-e-neg%C3%B3cio">',
                     '</a>'
                 ),
-                'type' => 'password',
+                'type' => 'password'
             );
 
             // Field for PagHiper Token Key.
@@ -44,7 +44,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     '<a href="https://dev.paghiper.com/reference/pr%C3%A9-requisitos-e-neg%C3%B3cio">',
                     '</a>'
                 ),
-                'type' => 'password',
+                'type' => 'password'
             );
 
             // Field for set number of days to due date.
@@ -55,7 +55,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'number',
                 'default' => 1,
                 'min' => 0,
-                'step' => 1,
+                'step' => 1
             );
             
             // Field for activate auto capture (Only pro version).
@@ -65,7 +65,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'desc' => __( 'Automatically payment capture and update order status.', 'payment-banking-slip-pix-for-lifterlms' ),
                 'desc_tooltip' => __( 'Checking this box will enable the automatic payment capture and order status updater.', 'payment-banking-slip-pix-for-lifterlms' ),
                 'default' => $gateway->get_option( 'disabled' ),
-                'type' => 'checkbox',
+                'type' => 'checkbox'
             );
 
             if ($gateway->id == $gateway_id) {
