@@ -29,21 +29,21 @@ jobs:
 
     # Add plugin files to a root directory
     - name: Make plugin root directory with auto-updater
-      run: "
+      run: |
         mkdir ${{env.PLUGIN_NAME_WITH_UPDATER}} && 
         cp -r ./admin ./includes ./languages ./public ./vendor *.php LICENSE composer.json composer.lock ./${{env.PLUGIN_NAME_WITH_UPDATER}}/ && 
         find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type f -exec chmod 0644 {} + && 
         find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type d -exec chmod 0755 {} + && 
-        ls -lah"
+        ls -lah
 
     - name: Make plugin root directory
-      run: "
+      run: |
         rm -Rf ./includes/plugin-updater && 
         mkdir ${{env.PLUGIN_NAME}} && 
         cp -r ./admin ./includes ./languages ./public ./vendor *.php LICENSE composer.json composer.lock *.txt ./${{env.PLUGIN_NAME}}/ && 
         find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && 
         find ./${{env.PLUGIN_NAME}} -type d -exec chmod 0755 {} + && 
-        ls -lah"
+        ls -lah
 
     # Compact plugin as .zip
     - name: Archive Release
