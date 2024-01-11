@@ -196,7 +196,7 @@ HTML;
                 $this->paghiper_process_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' pix gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
                 }
             }
 
@@ -257,8 +257,8 @@ HTML;
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                    // Free trial, reduced to free via coupon, etc....
-                    // We do want to record a transaction and then generate a receipt.
+                // Free trial, reduced to free via coupon, etc....
+                // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -419,7 +419,7 @@ HTML;
                 // Make the request args.
                 $args = array(
                     'headers' => $dataHeader,
-                    'body' => json_encode($dataBody),
+                    'body' => wp_json_encode($dataBody),
                     'timeout' => '10',
                     'redirection' => '5',
                     'httpversion' => '1.0'
@@ -430,13 +430,13 @@ HTML;
 
                 // Register log.
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Pix');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' pix gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Pix');
                 }
 
                 return json_decode(wp_remote_retrieve_body($request), true);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log('Date: ' . date('d M Y H:i:s') . ' pix gateway POST error: ' . $e->getMessage() . \PHP_EOL );
+                    $this->log('Date: ' . gmdate('d M Y H:i:s') . ' pix gateway POST error: ' . $e->getMessage() . \PHP_EOL );
                 }
 
                 return array();
@@ -467,7 +467,7 @@ HTML;
                     $this->paghiper_process_order($order);
                 } catch (Exception $e) {
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
+                        llms_log('Date: ' . gmdate('d M Y H:i:s') . ' pix gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
                     }
                 }
 

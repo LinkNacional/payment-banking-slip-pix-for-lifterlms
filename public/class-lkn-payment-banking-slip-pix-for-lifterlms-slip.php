@@ -143,7 +143,6 @@ HTML;
                     // Generating the barcode image with the framework picqer.
                     $generator = new BarcodeGeneratorPNG();
                     $barcodeHtml = $generator->getBarcode($barCodeNumber, $generator::TYPE_INTERLEAVED_2_5, 4, 250);
-                    $barcode64 = base64_encode($barcodeHtml);
 
                     $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
                     $buttonTitle = esc_html__('Copy slip code', 'payment-banking-slip-pix-for-lifterlms');
@@ -155,7 +154,6 @@ HTML;
                     <h2>{$title}</h2>
                     <div class="lkn_payment_slip_area">
                         <div class="lkn_barcode_div">
-                        <img class="lkn_barcode" src="data:image/png;base64,{$barcode64}" alt="Imagem">
                         <a id="lkn_slip" href="{$urlSlipPdf}" target="_blank"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="{$downloadTitle}">{$downloadButton}</button></a>
                         </div>
                         <div class="lkn_copyline_div">
@@ -214,7 +212,7 @@ HTML;
                 $this->paghiper_process_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' bank slip gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
                 }
             }
 
@@ -275,8 +273,8 @@ HTML;
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                    // Free trial, reduced to free via coupon, etc....
-                    // We do want to record a transaction and then generate a receipt.
+                // Free trial, reduced to free via coupon, etc....
+                // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -443,7 +441,7 @@ HTML;
                 // Make the request args.
                 $args = array(
                     'headers' => $dataHeader,
-                    'body' => json_encode($dataBody),
+                    'body' => wp_json_encode($dataBody),
                     'timeout' => '10',
                     'redirection' => '5',
                     'httpversion' => '1.0'
@@ -454,13 +452,13 @@ HTML;
 
                 // Register log.
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' bank slip gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagHiper - Bank Slip');
                 }
 
                 return json_decode(wp_remote_retrieve_body($request), true);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway POST error: ' . $e->getMessage() . \PHP_EOL );
+                    $this->log('Date: ' . gmdate('d M Y H:i:s') . ' bank slip gateway POST error: ' . $e->getMessage() . \PHP_EOL );
                 }
 
                 return array();
@@ -491,7 +489,7 @@ HTML;
                     $this->paghiper_process_order($order);
                 } catch (Exception $e) {
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' bank slip gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
+                        llms_log('Date: ' . gmdate('d M Y H:i:s') . ' bank slip gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Bank Slip');
                     }
                 }
 
