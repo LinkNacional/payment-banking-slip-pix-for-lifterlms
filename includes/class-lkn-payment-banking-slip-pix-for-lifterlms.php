@@ -135,7 +135,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
             return new Lkn_Puc_Plugin_UpdateChecker(
                 'https://api.linknacional.com.br/v2/u/?slug=payment-banking-slip-pix-for-lifterlms',
                 LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE,
-                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_SLUG
+                'payment-banking-slip-pix-for-lifterlms'
             );
         } else {
             return null;
