@@ -15,7 +15,7 @@
  * Plugin Name:       Payment Banking Slip Pix for LifterLMS
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Enable bank slip and pix payment for LifterLMS.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
  * License:           GPL-3.0+
@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) {
 /*
  * Currently plugin version.
  */
-define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_VERSION', '1.0.0' );
+define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_VERSION', '1.0.1' );
 
 define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION', '7.1.4' );
 
