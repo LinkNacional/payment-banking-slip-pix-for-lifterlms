@@ -5,7 +5,7 @@
   "image": "mcr.microsoft.com/vscode/devcontainers/php:7.4",
   "mounts": [
     {
-      "source": "/home/emanuellink/wordpress",
+      "source": "/home/seu-usuario/wordpress",
       "target": "/home/vscode/_wordpress",
       "type": "bind"
     }
@@ -17,7 +17,7 @@
       "nvmVersion": "0.39.3"
     }
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install && composer install",
   "customizations": {
     "vscode": {
       "extensions": [

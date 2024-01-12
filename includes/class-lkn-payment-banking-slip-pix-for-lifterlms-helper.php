@@ -48,10 +48,6 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         if ($is_deactivate_plugin) {
             deactivate_plugins(LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME);
 
-            if (isset($_GET['activate'])) {
-                unset($_GET['activate']);
-            }
-
             return false;
         }
 
@@ -118,7 +114,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         $configs = array();
 
         $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
-        $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . date('d.m.Y-H.i.s') . '.log';
+        $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . gmdate('d.m.Y-H.i.s') . '.log';
 
         $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
         $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
