@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 /**
  * @see        https://www.linknacional.com/
  * @since      1.0.0
@@ -72,7 +76,17 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
             __('for the Payment Banking Slip Pix for LifterLMS to activate.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
-        echo $message;
+        echo wp_kses(
+            $message,
+            array(
+                'div' => array(
+                    'p' => array(
+                        'strong' => array(),
+                        'a' => array()
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -91,7 +105,17 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
             __('plugin installed and activated for the Payment Banking Slip Pix for LifterLMS.', 'payment-banking-slip-pix-for-lifterlms')
         );
 
-        echo $message;
+        echo wp_kses(
+            $message,
+            array(
+                'div' => array(
+                    'p' => array(
+                        'strong' => array(),
+                        'a' => array()
+                    )
+                )
+            )
+        );
     }
 
     final public static function dependency_alert(): void {
@@ -116,10 +140,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
         $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . gmdate('d.m.Y-H.i.s') . '.log';
 
-        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
-        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_api_key', $gateway_id));
-        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_token_key', $gateway_id));
-        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_days_due_date', $gateway_id));
+        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_lkn_payment_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
+        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_lkn_payment_api_key', $gateway_id));
+        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_lkn_payment_token_key', $gateway_id));
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_lkn_payment_days_due_date', $gateway_id));
 
         $configs['urlPix'] = 'https://pix.paghiper.com/';
         $configs['urlSlip'] = 'https://api.paghiper.com/';

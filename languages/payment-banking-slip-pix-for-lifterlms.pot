@@ -71,22 +71,22 @@ msgstr ""
 msgid "Missing required field: CPF/CNPJ."
 msgstr ""
 
-msgid "Incorrect number of CPF/CNPJ digits: "
+msgid "Incorrect number of CPF/CNPJ digits"
 msgstr ""
 
-msgid "Incorrect and invalid CPF: "
+msgid "Incorrect and invalid CPF"
 msgstr ""
 
-msgid "Incorrect and invalid CNPJ: "
+msgid "Incorrect and invalid CNPJ"
 msgstr ""
 
-msgid "Invalid CPF: "
+msgid "Invalid CPF"
 msgstr ""
 
-msgid "Invalid CNPJ: "
+msgid "Invalid CNPJ"
 msgstr ""
 
-msgid "Invalid CPF/CNPJ: "
+msgid "Invalid CPF/CNPJ"
 msgstr ""
 
 msgid "Copy slip code"
