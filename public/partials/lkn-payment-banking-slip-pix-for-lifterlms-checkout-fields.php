@@ -6,7 +6,9 @@
  * @see        https://www.linknacional.com/
  * @since      1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 llms_form_field(
     array(

@@ -6,6 +6,9 @@
  * @see        https://www.linknacional.com/
  * @since      1.0.0
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * The public-facing functionality of the plugin.

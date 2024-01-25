@@ -9,6 +9,9 @@
  * @see        https://www.linknacional.com/
  * @since      1.0.0
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * The core plugin class.

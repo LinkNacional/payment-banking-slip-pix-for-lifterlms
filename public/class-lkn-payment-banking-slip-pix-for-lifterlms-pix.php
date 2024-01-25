@@ -7,7 +7,9 @@
  *
  * @version 1.0.0
  */
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /*
  * Pix Payment Gateway Class.
@@ -66,8 +68,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since   1.0.0
          */
         public function enqueue_tooltip_scripts(): void {
-            wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
-            wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
+            wp_enqueue_script('tooltip-js', plugin_dir_url( __FILE__ ) . 'js/lkn-popper-lib.min.js', array('jquery'), '2.11.6', true);
+            wp_enqueue_script('tooltip-init', plugin_dir_url( __FILE__ ) . 'js/lkn-bootstrap.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
         }
 
         /**
@@ -84,14 +86,13 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $payInstTitle = esc_html__( 'Payment Instructions', 'payment-banking-slip-pix-for-lifterlms' );
 
             // Make the HTML for present the Payment Instructions.
-            $paymentInst = <<<HTML
-            <div class="llms-notice llms-info">
+            $paymentInst = "
+            <div class=\"llms-notice llms-info\">
                 <h3>
                 {$payInstTitle}
                 </h3>
                 {$paymentInstruction}
-            </div>
-HTML;
+            </div>";
 
             // Below is the verification of payment of the order, to present or not the Instructions.
             global $wp;
@@ -103,7 +104,14 @@ HTML;
                     $order->get( 'payment_gateway' ) === $this->id
                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                 ) {
-                    echo apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id );
+                    echo wp_kses(
+                        apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id ),
+                        array(
+                            'div' => array(
+                                'h3' => array()
+                            )
+                        )
+                    );
                 }
             }
         }
@@ -135,18 +143,17 @@ HTML;
                     $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
 
                     // Make the HTML for present the Payment Area.
-                    $paymentArea = <<<HTML
+                    $paymentArea = "
                     <h2>{$title}</h2> 
-                    <div class="lkn_payment_area">
-                        <div class="lkn_qrcode_div"> 
-                        <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
+                    <div class=\"lkn_payment_area\">
+                        <div class=\"lkn_qrcode_div\"> 
+                        <img class=\"lkn_qrcode\" src=\"{$urlQrCode}\" alt=\"Imagem\">
                         </div>
-                        <div class="lkn_emvcode_div"> 
-                        <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
-                        <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
+                        <div class=\"lkn_emvcode_div\"> 
+                        <textarea id=\"lkn_emvcode\" readonly>{$emvCode}</textarea>
+                        <button id=\"lkn_copy_code\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$buttonTitle}\">{$buttonTitle}</button>
                         </div>
-                    </div>
-HTML;
+                    </div>";
 
                     // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
@@ -158,7 +165,19 @@ HTML;
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+                            echo wp_kses(
+                                apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ),
+                                array(
+                                    'h2' => array(),
+                                    'div' => array(
+                                        'div' => array(
+                                            'img' => array(),
+                                            'textarea' => array(),
+                                            'button' => array()
+                                        )
+                                    )
+                                )
+                            );
                         }
                     }
                 }
@@ -257,8 +276,8 @@ HTML;
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                // Free trial, reduced to free via coupon, etc....
-                // We do want to record a transaction and then generate a receipt.
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -549,7 +568,7 @@ HTML;
             $cpf_cnpj_len = strlen($cpf_cnpj);
 
             if ($cpf_cnpj_len < 11 || $cpf_cnpj_len > 14) {
-                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits', 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             $cpf_equal_valid = 0;
@@ -576,11 +595,11 @@ HTML;
             }
 
             if ($cpf_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF', 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             if ($cnpj_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             if (11 == $cpf_cnpj_len) {
@@ -591,7 +610,7 @@ HTML;
                     }
                     $d = ((10 * $d) % 11) % 10;
                     if ($cpf_cnpj[$c] != $d) {
-                        return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                        return llms_add_notice( sprintf( __( 'Invalid CPF', 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                     }
                 }
             } elseif (14 == $cpf_cnpj_len) {
@@ -611,7 +630,7 @@ HTML;
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[0]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                 }
 
                 $tamanho += 1;
@@ -628,10 +647,10 @@ HTML;
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[1]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                 }
             } else {
-                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ', 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             return true;

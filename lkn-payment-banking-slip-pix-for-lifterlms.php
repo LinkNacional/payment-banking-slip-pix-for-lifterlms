@@ -48,7 +48,7 @@ define( 'LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_BASENAME', plugin_basename(L
  * The code that runs during plugin activation.
  * This action is documented in includes/class-lkn-payment-banking-slip-pix-for-lifterlms-activator.php.
  */
-function activate_payment_banking_slip_pix_for_lifterlms(): void {
+function lkn_payment_activate_payment_banking_slip_pix_for_lifterlms(): void {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-payment-banking-slip-pix-for-lifterlms-activator.php';
     Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator::activate();
 }
@@ -57,13 +57,13 @@ function activate_payment_banking_slip_pix_for_lifterlms(): void {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-lkn-payment-banking-slip-pix-for-lifterlms-deactivator.php.
  */
-function deactivate_payment_banking_slip_pix_for_lifterlms(): void {
+function lkn_payment_deactivate_payment_banking_slip_pix_for_lifterlms(): void {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-payment-banking-slip-pix-for-lifterlms-deactivator.php';
     Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_payment_banking_slip_pix_for_lifterlms' );
-register_deactivation_hook( __FILE__, 'deactivate_payment_banking_slip_pix_for_lifterlms' );
+register_activation_hook( __FILE__, 'lkn_payment_activate_payment_banking_slip_pix_for_lifterlms' );
+register_deactivation_hook( __FILE__, 'lkn_payment_deactivate_payment_banking_slip_pix_for_lifterlms' );
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -80,8 +80,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-lkn-payment-banking-slip-p
  *
  * @since    1.0.0
  */
-function run_payment_banking_slip_pix_for_lifterlms(): void {
+function lkn_payment_run_payment_banking_slip_pix_for_lifterlms(): void {
     $plugin = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms();
     $plugin->run();
 }
-run_payment_banking_slip_pix_for_lifterlms();
+lkn_payment_run_payment_banking_slip_pix_for_lifterlms();
