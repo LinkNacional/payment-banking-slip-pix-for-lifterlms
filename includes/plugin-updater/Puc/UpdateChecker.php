@@ -1,8 +1,8 @@
 <?php
 
-if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
+if ( !class_exists('Lknpbsp_Puc_UpdateChecker', false) ):
 
-	abstract class Lkn_Puc_UpdateChecker {
+	abstract class Lknpbsp_Puc_UpdateChecker {
 	    protected $filterSuffix = '';
 	    protected $updateTransient = '';
 	    protected $translationType = ''; //"plugin" or "theme".
@@ -36,22 +36,22 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	    public $slug = '';
 
 	    /**
-	     * @var Lkn_Puc_InstalledPackage
+	     * @var Lknpbsp_Puc_InstalledPackage
 	     */
 	    protected $package;
 
 	    /**
-	     * @var Lkn_Puc_Scheduler
+	     * @var Lknpbsp_Puc_Scheduler
 	     */
 	    public $scheduler;
 
 	    /**
-	     * @var Lkn_Puc_UpgraderStatus
+	     * @var Lknpbsp_Puc_UpgraderStatus
 	     */
 	    protected $upgraderStatus;
 
 	    /**
-	     * @var Lkn_Puc_StateStore
+	     * @var Lknpbsp_Puc_StateStore
 	     */
 	    protected $updateState;
 
@@ -84,8 +84,8 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 
 	        $this->package = $this->createInstalledPackage();
 	        $this->scheduler = $this->createScheduler($checkPeriod);
-	        $this->upgraderStatus = new Lkn_Puc_UpgraderStatus();
-	        $this->updateState = new Lkn_Puc_StateStore($this->optionName);
+	        $this->upgraderStatus = new Lknpbsp_Puc_UpgraderStatus();
+	        $this->updateState = new Lknpbsp_Puc_StateStore($this->optionName);
 
 	        if ( did_action('init') ) {
 	            $this->loadTextDomain();
@@ -201,12 +201,12 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	    /**
 	     * Create a package instance that represents this plugin or theme.
 	     *
-	     * @return Lkn_Puc_InstalledPackage
+	     * @return Lknpbsp_Puc_InstalledPackage
 	     */
 	    abstract protected function createInstalledPackage();
 
 	    /**
-	     * @return Lkn_Puc_InstalledPackage
+	     * @return Lknpbsp_Puc_InstalledPackage
 	     */
 	    public function getInstalledPackage() {
 	        return $this->package;
@@ -219,14 +219,14 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	     * and substitute their own scheduler.
 	     *
 	     * @param int $checkPeriod
-	     * @return Lkn_Puc_Scheduler
+	     * @return Lknpbsp_Puc_Scheduler
 	     */
 	    abstract protected function createScheduler($checkPeriod);
 
 	    /**
 	     * Check for updates. The results are stored in the DB option specified in $optionName.
 	     *
-	     * @return Lkn_Puc_Update|null
+	     * @return Lknpbsp_Puc_Update|null
 	     */
 	    public function checkForUpdates() {
 	        $installedVersion = $this->getInstalledVersion();
@@ -260,7 +260,7 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	    /**
 	     * Load the update checker state from the DB.
 	     *
-	     * @return Lkn_Puc_StateStore
+	     * @return Lknpbsp_Puc_StateStore
 	     */
 	    public function getUpdateState() {
 	        return $this->updateState->lazyLoad();
@@ -285,7 +285,7 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	     * Uses cached update data. To retrieve update information straight from
 	     * the metadata URL, call requestUpdate() instead.
 	     *
-	     * @return Lkn_Puc_Update|null
+	     * @return Lknpbsp_Puc_Update|null
 	     */
 	    public function getUpdate() {
 	        $update = $this->updateState->getUpdate();
@@ -306,16 +306,16 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	     *
 	     * Subclasses should run the update through filterUpdateResult before returning it.
 	     *
-	     * @return Lkn_Puc_Update An instance of Update, or NULL when no updates are available.
+	     * @return Lknpbsp_Puc_Update An instance of Update, or NULL when no updates are available.
 	     */
 	    abstract public function requestUpdate();
 
 	    /**
 	     * Filter the result of a requestUpdate() call.
 	     *
-	     * @param Lkn_Puc_Update|null $update
+	     * @param Lknpbsp_Puc_Update|null $update
 	     * @param array|WP_Error|null $httpResult The value returned by wp_remote_get(), if any.
-	     * @return Lkn_Puc_Update
+	     * @return Lknpbsp_Puc_Update
 	     */
 	    protected function filterUpdateResult($update, $httpResult = null) {
 	        //Let plugins/themes modify the update.
@@ -338,9 +338,9 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	     * "Compatibility: Unknown".
 	     * The function mimics how wordpress.org API crafts the "tested" field out of "Tested up to".
 	     *
-	     * @param Lkn_Puc_Metadata|null $update
+	     * @param Lknpbsp_Puc_Metadata|null $update
 	     */
-	    protected function fixSupportedWordpressVersion(Lkn_Puc_Metadata $update = null) {
+	    protected function fixSupportedWordpressVersion(Lknpbsp_Puc_Metadata $update = null) {
 	        if ( !isset($update->tested) || !preg_match('/^\d++\.\d++$/', $update->tested) ) {
 	            return;
 	        }
@@ -621,7 +621,7 @@ if ( !class_exists('Lkn_Puc_UpdateChecker', false) ):
 	     *
 	     * @param string $metaClass Parse the JSON as an instance of this class. It must have a static fromJson method.
 	     * @param array $queryArgs Additional query arguments.
-	     * @return array [Lkn_Puc_Metadata|null, array|WP_Error] A metadata instance and the value returned by wp_remote_get().
+	     * @return array [Lknpbsp_Puc_Metadata|null, array|WP_Error] A metadata instance and the value returned by wp_remote_get().
 	     */
 	    protected function requestMetadata($metaClass, $queryArgs = []) {
 	        //Query args to append to the URL.

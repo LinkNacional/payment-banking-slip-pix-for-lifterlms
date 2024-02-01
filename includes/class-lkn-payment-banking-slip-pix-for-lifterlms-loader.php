@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader {
     /**
      * The array of actions registered with WordPress.
      *

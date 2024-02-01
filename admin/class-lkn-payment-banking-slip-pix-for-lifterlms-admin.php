@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
     /**
      * The ID of this plugin.
      *
@@ -60,10 +60,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader as all of the hooks are defined
+         * defined in Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader will then create the relationship
+         * The Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */

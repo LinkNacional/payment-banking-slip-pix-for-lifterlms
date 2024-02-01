@@ -1,8 +1,8 @@
 <?php
 
-if ( !class_exists('Lkn_Puc_Utils', false) ):
+if ( !class_exists('Lknpbsp_Puc_Utils', false) ):
 
-	class Lkn_Puc_Utils {
+	class Lknpbsp_Puc_Utils {
 	    /**
 	     * Get a value from a nested array or object based on a path.
 	     *

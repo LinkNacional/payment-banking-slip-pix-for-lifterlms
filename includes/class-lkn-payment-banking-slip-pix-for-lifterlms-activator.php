@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Activator {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Activator {
     /**
      * Constructor.
      *

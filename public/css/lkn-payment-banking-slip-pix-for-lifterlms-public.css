@@ -1,11 +1,11 @@
-.lkn_payment_area {
+.lknpbsp_payment_area {
     display: flex;
     align-items: top;
     border: 3px solid rgb(104, 104, 104);
     padding: 20px;
 }
 
-.lkn_payment_slip_area {
+.lknpbsp_payment_slip_area {
     display: flex;
     flex-wrap: wrap;
     align-items: top;

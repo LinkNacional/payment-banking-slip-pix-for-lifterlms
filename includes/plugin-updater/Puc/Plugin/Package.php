@@ -1,9 +1,9 @@
 <?php
-if ( !class_exists('Lkn_Puc_Plugin_Package', false) ):
+if ( !class_exists('Lknpbsp_Puc_Plugin_Package', false) ):
 
-	class Lkn_Puc_Plugin_Package extends Lkn_Puc_InstalledPackage {
+	class Lknpbsp_Puc_Plugin_Package extends Lknpbsp_Puc_InstalledPackage {
 	    /**
-	     * @var Lkn_Puc_Plugin_UpdateChecker
+	     * @var Lknpbsp_Puc_Plugin_UpdateChecker
 	     */
 	    protected $updateChecker;
 

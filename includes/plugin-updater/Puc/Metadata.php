@@ -1,5 +1,5 @@
 <?php
-if ( !class_exists('Lkn_Puc_Metadata', false) ):
+if ( !class_exists('Lknpbsp_Puc_Metadata', false) ):
 
 	/**
 	 * A base container for holding information about updates and plugin metadata.
@@ -8,7 +8,7 @@ if ( !class_exists('Lkn_Puc_Metadata', false) ):
 	 * @copyright 2016
 	 * @access public
 	 */
-	abstract class Lkn_Puc_Metadata {
+	abstract class Lknpbsp_Puc_Metadata {
 	    /**
 	     * Create an instance of this class from a JSON document.
 	     *

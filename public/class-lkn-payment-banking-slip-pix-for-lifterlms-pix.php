@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix extends LLMS_Payment_Gateway {
+    final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Pix extends LLMS_Payment_Gateway {
         /**
          * A description of the payment proccess.
          *
@@ -56,7 +56,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $this->set_variables();
 
             require_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-banking-slip-pix-for-lifterlms-pix-settings.php';
-            add_filter( 'llms_get_gateway_settings_fields', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings', 'pix_settings_fields'), 10, 2 );
+            add_filter( 'llms_get_gateway_settings_fields', array('Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Pix_Settings', 'pix_settings_fields'), 10, 2 );
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
@@ -78,7 +78,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since 1.0.0
          */
         public function before_view_order_table(): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             // Get Payment Instruction value.
             $paymentInstruction = $configs['paymentInstruction'];
@@ -145,7 +145,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     // Make the HTML for present the Payment Area.
                     $paymentArea = "
                     <h2>{$title}</h2> 
-                    <div class=\"lkn_payment_area\">
+                    <div class=\"lknpbsp_payment_area\">
                         <div class=\"lkn_qrcode_div\"> 
                         <img class=\"lkn_qrcode\" src=\"{$urlQrCode}\" alt=\"Imagem\">
                         </div>
@@ -197,7 +197,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          */
         public function handle_payment_source_switch($order, $form_data = array()): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             $previous_gateway = $order->get( 'payment_gateway' );
 
@@ -235,7 +235,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             // Make log.
             if ('yes' === $configs['logEnabled']) {
@@ -330,7 +330,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @param LLMS_Order $order order object
          */
         public function paghiper_process_order($order) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             // Get the order total price.
             $total = $order->get_price( 'total', array(), 'float' );
@@ -433,7 +433,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         public function lkn_paghiper_pix_request($dataBody, $dataHeader, $url) {
             try {
-                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+                $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
                 // Make the request args.
                 $args = array(
@@ -475,7 +475,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @version  3.10.0
          */
         public function handle_recurring_transaction($order) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
 
             // Switch order status to "on hold" if it's a paid order.
             if ( $order->get_price( 'total', array(), 'float' ) > 0 ) {

@@ -1,14 +1,14 @@
 <?php
-if ( !class_exists('Lkn_Puc_Plugin_Ui', false) ):
+if ( !class_exists('Lknpbsp_Puc_Plugin_Ui', false) ):
 	/**
 	 * Additional UI elements for plugins.
 	 */
-	class Lkn_Puc_Plugin_Ui {
+	class Lknpbsp_Puc_Plugin_Ui {
 	    private $updateChecker;
 	    private $manualCheckErrorTransient = '';
 
 	    /**
-	     * @param Lkn_Puc_Plugin_UpdateChecker $updateChecker
+	     * @param Lknpbsp_Puc_Plugin_UpdateChecker $updateChecker
 	     */
 	    public function __construct($updateChecker) {
 	        $this->updateChecker = $updateChecker;

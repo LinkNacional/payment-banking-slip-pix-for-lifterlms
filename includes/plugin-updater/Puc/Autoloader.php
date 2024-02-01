@@ -1,8 +1,8 @@
 <?php
 
-if ( !class_exists('Lkn_Puc_Autoloader', false) ):
+if ( !class_exists('Lknpbsp_Puc_Autoloader', false) ):
 
-	class Lkn_Puc_Autoloader {
+	class Lknpbsp_Puc_Autoloader {
 	    private $prefix = '';
 	    private $rootDir = '';
 	    private $libraryDir = '';
