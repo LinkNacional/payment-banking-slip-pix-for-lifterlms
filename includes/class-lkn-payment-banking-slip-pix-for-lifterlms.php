@@ -26,14 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms {
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
      *
      * @since    1.0.0
      *
-     * @var Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader maintains and registers all hooks for the plugin
+     * @var Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader maintains and registers all hooks for the plugin
      */
     private $loader;
 
@@ -104,7 +104,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      *
      * @since     1.0.0
      *
-     * @return Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader orchestrates the hooks of the plugin
+     * @return Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader orchestrates the hooks of the plugin
      */
     public function get_loader() {
         return $this->loader;
@@ -127,15 +127,15 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      * @since 1.0.0
      */
     public static function add_gateways($gateways) {
-        $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Pix';
-        $gateways[] = 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Slip';
+        $gateways[] = 'Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Pix';
+        $gateways[] = 'Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Slip';
 
         return $gateways;
     }
 
     public function updater_init(): ?object {
-        if (class_exists('Lkn_Puc_Plugin_UpdateChecker')) {
-            return new Lkn_Puc_Plugin_UpdateChecker(
+        if (class_exists('Lknpbsp_Puc_Plugin_UpdateChecker')) {
+            return new Lknpbsp_Puc_Plugin_UpdateChecker(
                 'https://api.linknacional.com.br/v2/u/?slug=payment-banking-slip-pix-for-lifterlms',
                 LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE,
                 'payment-banking-slip-pix-for-lifterlms'
@@ -150,10 +150,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      *
      * Include the following files that make up the plugin:
      *
-     * - Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader. Orchestrates the hooks of the plugin.
-     * - Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_i18n. Defines internationalization functionality.
-     * - Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin. Defines all hooks for the admin area.
-     * - Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public. Defines all hooks for the public side of the site.
+     * - Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader. Orchestrates the hooks of the plugin.
+     * - Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_i18n. Defines internationalization functionality.
+     * - Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Admin. Defines all hooks for the admin area.
+     * - Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Public. Defines all hooks for the public side of the site.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
@@ -204,19 +204,19 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
          */
         include_once plugin_dir_path( __DIR__ ) . 'includes/plugin-updater/plugin-update-checker.php';
 
-        $this->loader = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Loader();
+        $this->loader = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader();
     }
 
     /**
      * Define the locale for this plugin for internationalization.
      *
-     * Uses the Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_i18n class in order to set the domain and to register the hook
+     * Uses the Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_i18n class in order to set the domain and to register the hook
      * with WordPress.
      *
      * @since    1.0.0
      */
     private function set_locale(): void {
-        $plugin_i18n = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_i18n();
+        $plugin_i18n = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_i18n();
 
         $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
     }
@@ -228,11 +228,11 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      * @since    1.0.0
      */
     private function define_admin_hooks(): void {
-        $plugin_admin = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Admin( $this->get_plugin_name(), $this->get_version() );
+        $plugin_admin = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Admin( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
         $this->loader->add_action('init', $this, 'updater_init');
-        $this->loader->add_action( 'plugins_loaded', 'Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999 );
+        $this->loader->add_action( 'plugins_loaded', 'Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999 );
     }
 
     /**
@@ -242,7 +242,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms {
      * @since    1.0.0
      */
     private function define_public_hooks(): void {
-        $plugin_public = new Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Public( $this->get_plugin_name(), $this->get_version() );
+        $plugin_public = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Public( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );

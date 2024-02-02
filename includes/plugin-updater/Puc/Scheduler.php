@@ -1,11 +1,11 @@
 <?php
-if ( !class_exists('Lkn_Puc_Scheduler', false) ):
+if ( !class_exists('Lknpbsp_Puc_Scheduler', false) ):
 
 	/**
 	 * The scheduler decides when and how often to check for updates.
-	 * It calls @see Lkn_Puc_UpdateChecker::checkForUpdates() to perform the actual checks.
+	 * It calls @see Lknpbsp_Puc_UpdateChecker::checkForUpdates() to perform the actual checks.
 	 */
-	class Lkn_Puc_Scheduler {
+	class Lknpbsp_Puc_Scheduler {
 	    public $checkPeriod = 12; //How often to check for updates (in hours).
 		public $throttleRedundantChecks = false; //Check less often if we already know that an update is available.
 		public $throttledCheckPeriod = 72;
@@ -13,7 +13,7 @@ if ( !class_exists('Lkn_Puc_Scheduler', false) ):
 	    protected $hourlyCheckHooks = ['load-update.php'];
 
 	    /**
-	     * @var Lkn_Puc_UpdateChecker
+	     * @var Lknpbsp_Puc_UpdateChecker
 	     */
 	    protected $updateChecker;
 
@@ -22,7 +22,7 @@ if ( !class_exists('Lkn_Puc_Scheduler', false) ):
 	    /**
 	     * Scheduler constructor.
 	     *
-	     * @param Lkn_Puc_UpdateChecker $updateChecker
+	     * @param Lknpbsp_Puc_UpdateChecker $updateChecker
 	     * @param int $checkPeriod How often to check for updates (in hours).
 	     * @param array $hourlyHooks
 	     */
@@ -112,7 +112,7 @@ if ( !class_exists('Lkn_Puc_Scheduler', false) ):
 	            return;
 	        }
 
-	        if ( is_a($this->updateChecker, 'Lkn_Puc_Plugin_UpdateChecker') ) {
+	        if ( is_a($this->updateChecker, 'Lknpbsp_Puc_Plugin_UpdateChecker') ) {
 	            if ( 'plugin' !== $upgradeInfo['type'] || !isset($upgradeInfo['plugins']) ) {
 	                return;
 	            }

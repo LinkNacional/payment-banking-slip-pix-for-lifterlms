@@ -1,5 +1,5 @@
 <?php
-if ( !class_exists('Lkn_Puc_Plugin_Info', false) ):
+if ( !class_exists('Lknpbsp_Puc_Plugin_Info', false) ):
 
 	/**
 	 * A container class for holding and transforming various plugin metadata.
@@ -8,7 +8,7 @@ if ( !class_exists('Lkn_Puc_Plugin_Info', false) ):
 	 * @copyright 2016
 	 * @access public
 	 */
-	class Lkn_Puc_Plugin_Info extends Lkn_Puc_Metadata {
+	class Lknpbsp_Puc_Plugin_Info extends Lknpbsp_Puc_Metadata {
 	    //Most fields map directly to the contents of the plugin's info.json file.
 	    //See the relevant docs for a description of their meaning.
 	    public $name;

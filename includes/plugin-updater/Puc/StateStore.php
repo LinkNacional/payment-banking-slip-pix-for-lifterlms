@@ -1,8 +1,8 @@
 <?php
 
-if ( !class_exists('Lkn_Puc_StateStore', false) ):
+if ( !class_exists('Lknpbsp_Puc_StateStore', false) ):
 
-	class Lkn_Puc_StateStore {
+	class Lknpbsp_Puc_StateStore {
 	    /**
 	     * @var int Last update check timestamp.
 	     */
@@ -14,7 +14,7 @@ if ( !class_exists('Lkn_Puc_StateStore', false) ):
 	    protected $checkedVersion = '';
 
 	    /**
-	     * @var Lkn_Puc_Update|null Cached update.
+	     * @var Lknpbsp_Puc_Update|null Cached update.
 	     */
 	    protected $update = null;
 
@@ -65,7 +65,7 @@ if ( !class_exists('Lkn_Puc_StateStore', false) ):
 	    }
 
 	    /**
-	     * @return null|Lkn_Puc_Update
+	     * @return null|Lknpbsp_Puc_Update
 	     */
 	    public function getUpdate() {
 	        $this->lazyLoad();
@@ -73,10 +73,10 @@ if ( !class_exists('Lkn_Puc_StateStore', false) ):
 	    }
 
 	    /**
-	     * @param Lkn_Puc_Update|null $update
+	     * @param Lknpbsp_Puc_Update|null $update
 	     * @return $this
 	     */
-	    public function setUpdate(Lkn_Puc_Update $update = null) {
+	    public function setUpdate(Lknpbsp_Puc_Update $update = null) {
 	        $this->lazyLoad();
 	        $this->update = $update;
 	        return $this;
@@ -141,7 +141,7 @@ if ( !class_exists('Lkn_Puc_StateStore', false) ):
 	            $updateClass = get_class($this->update);
 	            $state->updateClass = $updateClass;
 	            $prefix = $this->getLibPrefix();
-	            if ( Lkn_Puc_Utils::startsWith($updateClass, $prefix) ) {
+	            if ( Lknpbsp_Puc_Utils::startsWith($updateClass, $prefix) ) {
 	                $state->updateBaseClass = substr($updateClass, strlen($prefix));
 	            }
 	        }
@@ -177,8 +177,8 @@ if ( !class_exists('Lkn_Puc_StateStore', false) ):
 	            return;
 	        }
 
-	        $this->lastCheck = intval(Lkn_Puc_Utils::get($state, 'lastCheck', 0));
-	        $this->checkedVersion = Lkn_Puc_Utils::get($state, 'checkedVersion', '');
+	        $this->lastCheck = intval(Lknpbsp_Puc_Utils::get($state, 'lastCheck', 0));
+	        $this->checkedVersion = Lknpbsp_Puc_Utils::get($state, 'checkedVersion', '');
 	        $this->update = null;
 
 	        if ( isset($state->update) ) {

@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Deactivator {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Deactivator {
     /**
      * Short Description. (use period).
      *

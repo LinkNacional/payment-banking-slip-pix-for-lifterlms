@@ -1,3 +1,7 @@
+# 1.0.3 - 02/02/2024
+* Update script to not allow direct access;
+* Change prefix to lknpbsp to avoid collisions.
+
 # 1.0.2 - 25/01/2024
 * Add external scripts to load localy;
 * Remove variables from internationalization functions;

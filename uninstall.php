@@ -29,9 +29,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // Clear Token and Api keys of bank slip
-update_option('llms_gateway_bankSlip_api_key', '');
-update_option('llms_gateway_bankSlip_token_key', '');
+delete_option('llms_gateway_lknpbsp_payment_api_key');
+delete_option('llms_gateway_lknpbsp_payment_token_key');
 
 // Clear Token and Api keys of pix
-update_option('llms_gateway_pix_api_key', '');
-update_option('llms_gateway_pix_token_key', '');
+delete_option('llms_gateway_lknpbsp_payment_api_key');
+delete_option('llms_gateway_lknpbsp_payment_token_key');

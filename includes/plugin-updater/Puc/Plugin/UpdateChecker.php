@@ -1,5 +1,5 @@
 <?php
-if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
+if ( !class_exists('Lknpbsp_Puc_Plugin_UpdateChecker', false) ):
 
 	/**
 	 * A custom plugin update checker.
@@ -8,7 +8,7 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	 * @copyright 2018
 	 * @access public
 	 */
-	class Lkn_Puc_Plugin_UpdateChecker extends Lkn_Puc_UpdateChecker {
+	class Lknpbsp_Puc_Plugin_UpdateChecker extends Lknpbsp_Puc_UpdateChecker {
 	    protected $updateTransient = 'update_plugins';
 	    protected $translationType = 'plugin';
 
@@ -17,7 +17,7 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 		public $muPluginFile = ''; //For MU plugins, the plugin filename relative to the mu-plugins directory.
 
 		/**
-		 * @var Lkn_Puc_Plugin_Package
+		 * @var Lknpbsp_Puc_Plugin_Package
 		 */
 	    protected $package;
 
@@ -68,17 +68,17 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	        //Details: https://github.com/YahnisElsts/plugin-update-checker/issues/138#issuecomment-335590964
 	        add_action('uninstall_' . $this->pluginFile, [$this, 'removeHooks']);
 
-	        $this->extraUi = new Lkn_Puc_Plugin_Ui($this);
+	        $this->extraUi = new Lknpbsp_Puc_Plugin_Ui($this);
 	    }
 
 	    /**
 	     * Create an instance of the scheduler.
 	     *
 	     * @param int $checkPeriod
-	     * @return Lkn_Puc_Scheduler
+	     * @return Lknpbsp_Puc_Scheduler
 	     */
 	    protected function createScheduler($checkPeriod) {
-	        $scheduler = new Lkn_Puc_Scheduler($this, $checkPeriod, ['load-plugins.php']);
+	        $scheduler = new Lknpbsp_Puc_Scheduler($this, $checkPeriod, ['load-plugins.php']);
 	        register_deactivation_hook($this->pluginFile, [$scheduler, 'removeUpdaterCron']);
 	        return $scheduler;
 	    }
@@ -124,13 +124,13 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	     * @uses wp_remote_get()
 	     *
 	     * @param array $queryArgs Additional query arguments to append to the request. Optional.
-	     * @return Lkn_Puc_Plugin_Info
+	     * @return Lknpbsp_Puc_Plugin_Info
 	     */
 	    public function requestInfo($queryArgs = []) {
-	        list($pluginInfo, $result) = $this->requestMetadata('Lkn_Puc_Plugin_Info', $queryArgs);
+	        list($pluginInfo, $result) = $this->requestMetadata('Lknpbsp_Puc_Plugin_Info', $queryArgs);
 
 	        if ( $pluginInfo !== null ) {
-	            /** @var Lkn_Puc_Plugin_Info $pluginInfo */
+	            /** @var Lknpbsp_Puc_Plugin_Info $pluginInfo */
 	            $pluginInfo->filename = $this->pluginFile;
 	            $pluginInfo->slug = $this->slug;
 	        }
@@ -144,7 +144,7 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	     *
 	     * @uses PluginUpdateChecker::requestInfo()
 	     *
-	     * @return Lkn_Puc_Update|null An instance of Plugin_Update, or NULL when no updates are available.
+	     * @return Lknpbsp_Puc_Update|null An instance of Plugin_Update, or NULL when no updates are available.
 	     */
 	    public function requestUpdate() {
 	        //For the sake of simplicity, this function just calls requestInfo()
@@ -153,7 +153,7 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	        if ( $pluginInfo === null ) {
 	            return null;
 	        }
-	        $update = Lkn_Puc_Plugin_Update::fromPluginInfo($pluginInfo);
+	        $update = Lknpbsp_Puc_Plugin_Update::fromPluginInfo($pluginInfo);
 
 	        $update = $this->filterUpdateResult($update);
 
@@ -281,12 +281,12 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	     * Uses cached update data. To retrieve update information straight from
 	     * the metadata URL, call requestUpdate() instead.
 	     *
-	     * @return Lkn_Puc_Plugin_Update|null
+	     * @return Lknpbsp_Puc_Plugin_Update|null
 	     */
 	    public function getUpdate() {
 	        $update = parent::getUpdate();
 	        if ( isset($update) ) {
-	            /** @var Lkn_Puc_Plugin_Update $update */
+	            /** @var Lknpbsp_Puc_Plugin_Update $update */
 	            $update->filename = $this->pluginFile;
 	        }
 	        return $update;
@@ -393,14 +393,14 @@ if ( !class_exists('Lkn_Puc_Plugin_UpdateChecker', false) ):
 	    /**
 	     * Create a package instance that represents this plugin or theme.
 	     *
-	     * @return Lkn_Puc_InstalledPackage
+	     * @return Lknpbsp_Puc_InstalledPackage
 	     */
 	    protected function createInstalledPackage() {
-	        return new Lkn_Puc_Plugin_Package($this->pluginAbsolutePath, $this);
+	        return new Lknpbsp_Puc_Plugin_Package($this->pluginAbsolutePath, $this);
 	    }
 
 	    /**
-	     * @return Lkn_Puc_Plugin_Package
+	     * @return Lknpbsp_Puc_Plugin_Package
 	     */
 	    public function getInstalledPackage() {
 	        return $this->package;

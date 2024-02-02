@@ -1,5 +1,5 @@
 <?php
-if ( !class_exists('Lkn_Puc_Update', false) ):
+if ( !class_exists('Lknpbsp_Puc_Update', false) ):
 
 	/**
 	 * A simple container class for holding information about an available update.
@@ -7,7 +7,7 @@ if ( !class_exists('Lkn_Puc_Update', false) ):
 	 * @author Janis Elsts
 	 * @access public
 	 */
-	abstract class Lkn_Puc_Update extends Lkn_Puc_Metadata {
+	abstract class Lknpbsp_Puc_Update extends Lknpbsp_Puc_Metadata {
 	    public $slug;
 	    public $version;
 	    public $download_url;

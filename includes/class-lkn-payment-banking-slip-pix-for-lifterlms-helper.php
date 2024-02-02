@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since      1.0.0
  * @author     Link Nacional
  */
-final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
+final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     /**
      * Show plugin dependency notice.
      *
@@ -30,7 +30,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
             && version_compare(LLMS_VERSION, LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')
         ) {
             // Show admin notice.
-            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
+            Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::dependency_alert();
 
             $is_deactivate_plugin = true;
         }
@@ -43,7 +43,7 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         // Verify if LifterLMS plugin is actived.
         if ( ! $is_Lifter_active) {
             // Show admin notice.
-            Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
+            Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::inactive_alert();
 
             $is_deactivate_plugin = true;
         }
@@ -119,11 +119,11 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
     }
 
     final public static function dependency_alert(): void {
-        add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'dependency_notice'));
+        add_action('admin_notices', array('Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'dependency_notice'));
     }
 
     final public static function inactive_alert(): void {
-        add_action('admin_notices', array('Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
+        add_action('admin_notices', array('Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'inactive_notice'));
     }
 
     /**
@@ -140,10 +140,10 @@ final class Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper {
         $configs['logEnabled'] = get_option(sprintf('llms_gateway_%s_logging_enabled', $gateway_id), 'no');
         $configs['baseLog'] = LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . 'includes/logs/' . gmdate('d.m.Y-H.i.s') . '.log';
 
-        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_lkn_payment_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
-        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_lkn_payment_api_key', $gateway_id));
-        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_lkn_payment_token_key', $gateway_id));
-        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_lkn_payment_days_due_date', $gateway_id));
+        $configs['paymentInstruction'] = get_option(sprintf('llms_gateway_%s_lknpbsp_payment_payment_instructions', $gateway_id), __('Check the payment area below.', 'payment-banking-slip-pix-for-lifterlms'));
+        $configs['apiKey'] = get_option(sprintf('llms_gateway_%s_lknpbsp_payment_api_key', $gateway_id));
+        $configs['tokenKey'] = get_option(sprintf('llms_gateway_%s_lknpbsp_payment_token_key', $gateway_id));
+        $configs['daysDueDate'] = get_option(sprintf('llms_gateway_%s_lknpbsp_payment_days_due_date', $gateway_id));
 
         $configs['urlPix'] = 'https://pix.paghiper.com/';
         $configs['urlSlip'] = 'https://api.paghiper.com/';
