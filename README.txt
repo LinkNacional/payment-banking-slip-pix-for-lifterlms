@@ -1,7 +1,7 @@
 === Payment Banking Slip Pix for LifterLMS ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: lifterlms, bank, slip, pix, payment, banking.
+Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
 Tested up to: 6.4
 Stable tag: 1.0.3

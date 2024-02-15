@@ -235,6 +235,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 }
             }
 
+            /* translators: %1$s: Previous payment gateway label %2$s: New paymenta gateway label */
             $order->add_note( sprintf( __( 'Payment method switched from "%1$s" to "%2$s"', 'lifterlms' ), $previous_gateway, $this->get_admin_title() ) );
         }
 
