@@ -283,7 +283,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     $this->log( 'Bank Slip Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -292,8 +292,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                    // Free trial, reduced to free via coupon, etc....
-                    // We do want to record a transaction and then generate a receipt.
+                // Free trial, reduced to free via coupon, etc....
+                // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
@@ -590,7 +590,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $cpf_cnpj_len = strlen($cpf_cnpj);
 
             if ($cpf_cnpj_len < 11 || $cpf_cnpj_len > 14) {
-                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits', 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             $cpf_equal_valid = 0;
@@ -617,11 +617,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
             }
 
             if ($cpf_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF', 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             if ($cnpj_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             if (11 == $cpf_cnpj_len) {
@@ -632,7 +632,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     }
                     $d = ((10 * $d) % 11) % 10;
                     if ($cpf_cnpj[$c] != $d) {
-                        return llms_add_notice( sprintf( __( 'Invalid CPF', 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                        return llms_add_notice( sprintf( __( 'Invalid CPF', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                     }
                 }
             } elseif (14 == $cpf_cnpj_len) {
@@ -652,7 +652,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[0]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                 }
 
                 $tamanho += 1;
@@ -669,10 +669,10 @@ if (class_exists('LLMS_Payment_Gateway')) {
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[1]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
                 }
             } else {
-                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ', 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
             }
 
             return true;
