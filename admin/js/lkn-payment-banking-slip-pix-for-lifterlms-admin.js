@@ -21,7 +21,7 @@
         })
 
         // Setting the disabled option for automatic bank slip payment capture input option, because it's only avaliable in the Pro version.
-        $('input#llms_gateway_bankSlip_auto_payment_capture').attr({
+        $('input#llms_gateway_bankSlip_lknpbsp_payment_auto_payment_capture').attr({
           disabled: true
         })
       } else if (section === 'pix') {
@@ -33,7 +33,7 @@
         })
 
         // Setting the disabled option for automatic pix payment capture input option, because it's only avaliable in the Pro version.
-        $('input#llms_gateway_pix_auto_payment_capture').attr({
+        $('input#llms_gateway_pix_lknpbsp_payment_auto_payment_capture').attr({
           disabled: true
         })
       }

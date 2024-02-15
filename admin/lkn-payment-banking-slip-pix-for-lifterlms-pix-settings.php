@@ -30,6 +30,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'id' => $gateway->get_option_name( 'lknpbsp_payment_api_key' ),
                 'title' => __( 'API Key', 'payment-banking-slip-pix-for-lifterlms' ),
                 'desc' => '<br>' . sprintf(
+                    /* translators: %1$s: Open link tag %2$s: Close link tag */
                     __( 'API key is a unique code used to authenticate access to PagHiper API, ensuring secure interactions between applications and the API. %1$sLearn how finding your API key.%2$s', 'payment-banking-slip-pix-for-lifterlms' ),
                     '<a href="https://dev.paghiper.com/reference/pr%C3%A9-requisitos-e-neg%C3%B3cio">',
                     '</a>'
@@ -42,6 +43,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'id' => $gateway->get_option_name( 'lknpbsp_payment_token_key' ),
                 'title' => __( 'Token Key', 'payment-banking-slip-pix-for-lifterlms' ),
                 'desc' => '<br>' . sprintf(
+                    /* translators: %1$s: Open link tag %2$s: Close link tag */
                     __( 'Token Key is a digital authentication credential that grants access to the PagHiper service, often used to verify the identity of the user and ensure secure communication between parties. %1$sLearn how finding your Token key.%2$s', 'payment-banking-slip-pix-for-lifterlms' ),
                     '<a href="https://dev.paghiper.com/reference/pr%C3%A9-requisitos-e-neg%C3%B3cio">',
                     '</a>'

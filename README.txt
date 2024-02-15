@@ -1,10 +1,10 @@
 === Payment Banking Slip Pix for LifterLMS ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: lifterlms, bank, slip, pix, payment, banking.
+Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -70,6 +70,12 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 1. Nothing;
 
 == Changelog ==
+
+= 1.0.4 =
+**15/02/2024**
+* Update root file name to slug;
+* Add comments for translations placeholders;
+* Fixed incorrectly i18n function calls.
 
 = 1.0.3 =
 **02/02/2024**

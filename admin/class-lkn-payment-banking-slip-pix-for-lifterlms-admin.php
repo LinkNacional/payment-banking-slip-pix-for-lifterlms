@@ -72,6 +72,7 @@ final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Admin {
         
         $bannerStrings = array(
             'message' => sprintf(
+                /* translators: %1$s: Open link tag %2$s: Close link tag */
                 __('Get new features with %1$sPayment Banking Slip Pix for LifterLMS Pro.%2$s', 'payment-banking-slip-pix-for-lifterlms'),
                 '<a href="https://www.linknacional.com/wordpress/plugins/" target="_blank">',
                 '</a>'
