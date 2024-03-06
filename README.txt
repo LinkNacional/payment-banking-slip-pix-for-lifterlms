@@ -24,6 +24,9 @@ We utilize some open-source JS libraries:
 * [Bootstrap](https://github.com/twbs/bootstrap) for complement tooltip generation and better input treatment;
 * [Popper JS](https://www.npmjs.com/package/@popperjs/core) for tooltip generation.
 
+We utilize the following open-source composer PHP libraries:
+* [PHP Barcode Generator](https://github.com/picqer/php-barcode-generator) for banking slip invoice payment generation.
+
 **User instructions**
 
 1. Now go to the Settings menu of the LifterLMS;
