@@ -4,7 +4,7 @@ Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -19,6 +19,13 @@ The [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpr
 **Dependencies**
 
 Payment Banking Slip Pix for LifterLMS plugin is dependent on [LifterLMS plugin](https://wordpress.org/plugins/lifterlms/), please make sure LifterLMS is installed and properly configured before starting Payment Banking Slip Pix for LifterLMS installation.
+
+We utilize some open-source JS libraries:
+* [Bootstrap](https://github.com/twbs/bootstrap) for complement tooltip generation and better input treatment;
+* [Popper JS](https://www.npmjs.com/package/@popperjs/core) for tooltip generation.
+
+We utilize the following open-source composer PHP libraries:
+* [PHP Barcode Generator](https://github.com/picqer/php-barcode-generator) for banking slip invoice payment generation.
 
 **User instructions**
 
@@ -70,6 +77,11 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 1. Nothing;
 
 == Changelog ==
+
+= 1.0.5 =
+**06/03/2024**
+* Remove plugin updater lib;
+* Add more references for libraries utilized.
 
 = 1.0.4 =
 **15/02/2024**

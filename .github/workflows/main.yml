@@ -7,7 +7,6 @@ on:
 
 env:
   PLUGIN_NAME: payment-banking-slip-pix-for-lifterlms
-  PLUGIN_NAME_WITH_UPDATER: payment-banking-slip-pix-for-lifterlms-updt
   PHP_VERSION: "7.4"
 
 jobs:
@@ -24,21 +23,11 @@ jobs:
       with:
         php_version: ${{ env.PHP_VERSION }}
         working_dir: "."
-        args: --ignore-platform-reqs
+        args: --ignore-platform-reqs --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloade
         command: install
-
-    # Add plugin files to a root directory
-    - name: Make plugin root directory with auto-updater
-      run: |
-        mkdir ${{env.PLUGIN_NAME_WITH_UPDATER}} && 
-        cp -r ./admin ./includes ./languages ./public ./vendor *.php *.txt ./${{env.PLUGIN_NAME_WITH_UPDATER}}/ && 
-        find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type f -exec chmod 0644 {} + && 
-        find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type d -exec chmod 0755 {} + && 
-        ls -lah
 
     - name: Make plugin root directory
       run: |
-        rm -Rf ./includes/plugin-updater && 
         mkdir ${{env.PLUGIN_NAME}} && 
         cp -r ./admin ./includes ./languages ./public ./vendor *.php *.txt ./${{env.PLUGIN_NAME}}/ && 
         find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && 
@@ -55,15 +44,6 @@ jobs:
         filename: "${{ env.PLUGIN_NAME }}.zip"
         exclusions: "*.git* /*node_modules/* .editorconfig"
 
-    - name: Archive Release with auto-updater
-      uses: thedoctor0/zip-release@master
-      with:
-        type: "zip"
-        path: "${{ env.PLUGIN_NAME_WITH_UPDATER }}"
-        directory: "."
-        filename: "${{ env.PLUGIN_NAME_WITH_UPDATER }}.zip"
-        exclusions: "*.git* /*node_modules/* .editorconfig"
-
     # Update version tag
     - name: Bump version and push tag
       id: tag_version
@@ -75,7 +55,7 @@ jobs:
     - name: Generate new Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ env.PLUGIN_NAME }}.zip,${{env.PLUGIN_NAME_WITH_UPDATER}}.zip"
+        artifacts: "${{ env.PLUGIN_NAME }}.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
         commit: "main"
         draft: true
