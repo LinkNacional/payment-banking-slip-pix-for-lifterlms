@@ -133,18 +133,6 @@ final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms {
         return $gateways;
     }
 
-    public function updater_init(): ?object {
-        if (class_exists('Lknpbsp_Puc_Plugin_UpdateChecker')) {
-            return new Lknpbsp_Puc_Plugin_UpdateChecker(
-                'https://api.linknacional.com.br/v2/u/?slug=payment-banking-slip-pix-for-lifterlms',
-                LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_FILE,
-                'payment-banking-slip-pix-for-lifterlms'
-            );
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Load the required dependencies for this plugin.
      *
@@ -199,11 +187,6 @@ final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms {
          */
         require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-payment-banking-slip-pix-for-lifterlms-slip.php';
 
-        /**
-         * The class responsible for plugin updater checker of plugin.
-         */
-        include_once plugin_dir_path( __DIR__ ) . 'includes/plugin-updater/plugin-update-checker.php';
-
         $this->loader = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Loader();
     }
 
@@ -231,7 +214,6 @@ final class Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms {
         $plugin_admin = new Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Admin( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-        $this->loader->add_action('init', $this, 'updater_init');
         $this->loader->add_action( 'plugins_loaded', 'Lknpbsp_Payment_Banking_Slip_Pix_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999 );
     }
 
