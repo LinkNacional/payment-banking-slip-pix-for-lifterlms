@@ -20,6 +20,10 @@ The [Payment Banking Slip Pix for LifterLMS](https://www.linknacional.com/wordpr
 
 Payment Banking Slip Pix for LifterLMS plugin is dependent on [LifterLMS plugin](https://wordpress.org/plugins/lifterlms/), please make sure LifterLMS is installed and properly configured before starting Payment Banking Slip Pix for LifterLMS installation.
 
+We utilize some open-source JS libraries:
+* [Bootstrap](https://github.com/twbs/bootstrap) for complement tooltip generation and better input treatment;
+* [Popper JS](https://www.npmjs.com/package/@popperjs/core) for tooltip generation.
+
 **User instructions**
 
 1. Now go to the Settings menu of the LifterLMS;
