@@ -75,6 +75,11 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 
 == Changelog ==
 
+= 1.0.5 =
+**06/03/2024**
+* Remove plugin updater lib;
+* Add more references for libraries utilized.
+
 = 1.0.4 =
 **15/02/2024**
 * Update root file name to slug;
