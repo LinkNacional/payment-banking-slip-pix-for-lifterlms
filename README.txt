@@ -3,8 +3,8 @@ Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
-Tested up to: 6.4
-Stable tag: 1.0.5
+Tested up to: 6.5
+Stable tag: 1.0.6
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -26,6 +26,8 @@ We utilize some open-source JS libraries:
 
 We utilize the following open-source composer PHP libraries:
 * [PHP Barcode Generator](https://github.com/picqer/php-barcode-generator) for banking slip invoice payment generation.
+
+We utilize [PagHiper](https://www.paghiper.com/) as a payment processor, it will process the payment with the information provided in the checkout page. You will need a PagHiper account to utilize this payment method. Here are the  (service terms)[https://www.paghiper.com/contrato].
 
 **User instructions**
 
@@ -77,6 +79,12 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 1. Nothing;
 
 == Changelog ==
+
+= 1.0.6 =
+**18/03/2024**
+* Update README file with PagHiper service terms;
+* Add composer.json reference in the plugin build.
+
 
 = 1.0.5 =
 **06/03/2024**

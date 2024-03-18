@@ -1,3 +1,7 @@
+# 1.0.6 - 18/03/2024
+* Update README file with PagHiper service terms;
+* Add composer.json reference in the plugin build.
+
 # 1.0.5 - 06/03/2024
 * Remove plugin updater lib;
 * Add more references for libraries utilized.
