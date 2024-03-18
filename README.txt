@@ -27,6 +27,8 @@ We utilize some open-source JS libraries:
 We utilize the following open-source composer PHP libraries:
 * [PHP Barcode Generator](https://github.com/picqer/php-barcode-generator) for banking slip invoice payment generation.
 
+We utilize [PagHiper](https://www.paghiper.com/) as a payment processor, it will process the payment with the information provided in the checkout page. You will need a PagHiper account to utilize this payment method. Here are the  (service terms)[https://www.paghiper.com/contrato].
+
 **User instructions**
 
 1. Now go to the Settings menu of the LifterLMS;
