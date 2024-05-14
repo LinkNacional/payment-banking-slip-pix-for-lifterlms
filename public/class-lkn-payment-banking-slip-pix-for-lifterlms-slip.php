@@ -15,6 +15,7 @@ require LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . '/vendor/autoload.php';
 
 // Framewor for generate bank slip barcode.
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use Zend\Barcode\Barcode;
 
 /*
  * Bank Slip Payment Gateway Class.
@@ -149,26 +150,31 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     $barCodeNumber = $objOrder->slip_bar_code_number;
 
                     // Generating the barcode image with the framework picqer.
-                    $generator = new BarcodeGeneratorPNG();
-                    $barcodeHtml = $generator->getBarcode($barCodeNumber, $generator::TYPE_INTERLEAVED_2_5, 4, 250);
-
                     $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
                     $buttonTitle = esc_html__('Copy slip code', 'payment-banking-slip-pix-for-lifterlms');
                     $downloadButton = esc_html__('Download Bank Slip', 'payment-banking-slip-pix-for-lifterlms');
                     $downloadTitle = esc_html__('Download Bank Slip PDF', 'payment-banking-slip-pix-for-lifterlms');
+                    // Exemplo de exibição do código de barras PNG em uma página da web
+                    $imageResource = Barcode::draw('code128', 'image', array('text' => $barCodeNumber));
+                    imagepng($imageResource, __DIR__ . "/img/barcode.png");
+                    $caminho = __DIR__ . "/img/barcode.png";
+                    
+                    // Exiba a imagem
+                    $paymentArea = '
+                    <h2>' . $title . '</h2>
+                    <div class="lknpbsp_payment_slip_area">
+                        <div class="lkn_barcode_div">
+                        <a id="lkn_slip" href="' . $urlSlipPdf . '" target="_blank"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="' . $downloadTitle . '">' . $downloadButton . '</button></a>
+                        </div>
+                        <div>
+                        <img src="' . $caminho . 'alt="teste">quadriceps
 
-                    // Make the HTML for present the Payment Area.
-                    $paymentArea = "
-                    <h2>{$title}</h2>
-                    <div class=\"lknpbsp_payment_slip_area\">
-                        <div class=\"lkn_barcode_div\">
-                        <a id=\"lkn_slip\" href=\"{$urlSlipPdf}\" target=\"_blank\"><button id=\"lkn_slip_pdf\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$downloadTitle}\">{$downloadButton}</button></a>
                         </div>
-                        <div class=\"lkn_copyline_div\">
-                        <textarea id=\"lkn_emvcode\" readonly>{$copyableLine}</textarea>
-                        <button id=\"lkn_copy_code\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$buttonTitle}\">{$buttonTitle}</button>
+                        <div class="lkn_copyline_div">
+                        <textarea id="lkn_emvcode" readonly>' . $copyableLine . '</textarea>
+                        <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="' . $buttonTitle . '">' . $buttonTitle . '</button>
                         </div>
-                    </div>";
+                    </div>';
 
                     // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
@@ -181,15 +187,26 @@ if (class_exists('LLMS_Payment_Gateway')) {
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
                             echo wp_kses(
-                                apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ),
+                                $paymentArea,
                                 array(
                                     'h2' => array(),
                                     'div' => array(
-                                        'div' => array(
-                                            'img' => array(),
-                                            'textarea' => array(),
-                                            'button' => array()
-                                        )
+                                        'class' => array()
+                                    ),
+                                    'a' => array(
+                                        'id' => array(),
+                                        'href' => array(),
+                                        'target' => array()
+                                    ),
+                                    'button' => array(
+                                        'id' => array(),
+                                        'data-toggle' => array(),
+                                        'data-placement' => array(),
+                                        'title' => array()
+                                    ),
+                                    'textarea' => array(
+                                        'id' => array(),
+                                        'readonly' => array()
                                     )
                                 )
                             );
@@ -293,8 +310,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 if ( $plan->is_free() ) {
                     $order->set( 'status', 'completed' );
 
-                // Free trial, reduced to free via coupon, etc....
-                // We do want to record a transaction and then generate a receipt.
+                    // Free trial, reduced to free via coupon, etc....
+                    // We do want to record a transaction and then generate a receipt.
                 } else {
                     // Record a $0.00 transaction to ensure a receipt is sent.
                     $order->record_transaction(
