@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 require LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . '/vendor/autoload.php';
 
 // Framewor for generate bank slip barcode.
+
+use Picqer\Barcode\BarcodeGeneratorHTML;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Zend\Barcode\Barcode;
 
@@ -155,27 +157,9 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     $downloadButton = esc_html__('Download Bank Slip', 'payment-banking-slip-pix-for-lifterlms');
                     $downloadTitle = esc_html__('Download Bank Slip PDF', 'payment-banking-slip-pix-for-lifterlms');
                     // Exemplo de exibição do código de barras PNG em uma página da web
-                    $imageResource = Barcode::draw('code128', 'image', array('text' => $barCodeNumber));
-                    imagepng($imageResource, __DIR__ . "/img/barcode.png");
-                    $caminho = __DIR__ . "/img/barcode.png";
+                    $imageResource = new BarcodeGeneratorHTML();   
+                    $image = $imageResource->getBarcode($barCodeNumber, $imageResource::TYPE_CODE_128);                 
                     
-                    // Exiba a imagem
-                    $paymentArea = '
-                    <h2>' . $title . '</h2>
-                    <div class="lknpbsp_payment_slip_area">
-                        <div class="lkn_barcode_div">
-                        <a id="lkn_slip" href="' . $urlSlipPdf . '" target="_blank"><button id="lkn_slip_pdf" data-toggle="tooltip" data-placement="top" title="' . $downloadTitle . '">' . $downloadButton . '</button></a>
-                        </div>
-                        <div>
-                        <img src="' . $caminho . 'alt="teste">quadriceps
-
-                        </div>
-                        <div class="lkn_copyline_div">
-                        <textarea id="lkn_emvcode" readonly>' . $copyableLine . '</textarea>
-                        <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="' . $buttonTitle . '">' . $buttonTitle . '</button>
-                        </div>
-                    </div>';
-
                     // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
 
@@ -186,30 +170,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo wp_kses(
-                                $paymentArea,
-                                array(
-                                    'h2' => array(),
-                                    'div' => array(
-                                        'class' => array()
-                                    ),
-                                    'a' => array(
-                                        'id' => array(),
-                                        'href' => array(),
-                                        'target' => array()
-                                    ),
-                                    'button' => array(
-                                        'id' => array(),
-                                        'data-toggle' => array(),
-                                        'data-placement' => array(),
-                                        'title' => array()
-                                    ),
-                                    'textarea' => array(
-                                        'id' => array(),
-                                        'readonly' => array()
-                                    )
-                                )
-                            );
+                            include_once LKN_PAYMENT_BANKING_SLIP_PIX_FOR_LIFTERLMS_DIR . "public/partials/lkn-payment-banking-slip-pix-for-lifterlms-slip-view-payment.php";
                         }
                     }
                 }
