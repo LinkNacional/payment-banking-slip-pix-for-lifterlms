@@ -159,7 +159,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     // Exemplo de exibição do código de barras PNG em uma página da web
                     $imageResource = new BarcodeGeneratorHTML();   
                     $image = $imageResource->getBarcode($barCodeNumber, $imageResource::TYPE_CODE_128);                 
-                    
                     // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
 
