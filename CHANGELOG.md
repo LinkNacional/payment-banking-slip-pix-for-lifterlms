@@ -1,3 +1,6 @@
+# 1.0.7
+* Change in the barcode generation method and its implementation.
+
 # 1.0.6 - 18/03/2024
 * Update README file with PagHiper service terms;
 * Add composer.json reference in the plugin build.
