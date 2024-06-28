@@ -23,8 +23,9 @@ jobs:
       with:
         php_version: ${{ env.PHP_VERSION }}
         working_dir: "."
-        args: --ignore-platform-reqs --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
+        args: --ignore-platform-reqs
         command: install
+        dev: no
 
     - name: Make plugin root directory
       run: |
