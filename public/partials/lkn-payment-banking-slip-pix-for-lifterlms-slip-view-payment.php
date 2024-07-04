@@ -10,8 +10,8 @@ $html = "<h2>{$title}</h2>
             </a>
         </div>
         <div class=\"lkn_copyline_div\">
+            <div id=\"lkn_codbarra\">{$image}</div>
             <textarea id=\"lkn_emvcode\" readonly>{$copyableLine}</textarea><br>
-            <div style=\"margin:auto;\">{$image}</div>
             <button id=\"lkn_copy_code\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$buttonTitle}\">
                 {$buttonTitle}
             </button>
