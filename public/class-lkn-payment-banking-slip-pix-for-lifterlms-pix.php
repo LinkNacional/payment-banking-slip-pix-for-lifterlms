@@ -170,12 +170,23 @@ if (class_exists('LLMS_Payment_Gateway')) {
                                 array(
                                     'h2' => array(),
                                     'div' => array(
-                                        'div' => array(
-                                            'img' => array(),
-                                            'textarea' => array(),
-                                            'button' => array()
-                                        )
-                                    )
+                                        'class' => array(),
+                                    ),
+                                    'div' => array(
+                                        'class' => array(),
+                                    ),
+                                    'img' => array(
+                                        'src' => array(),
+                                        'alt' => array(),
+                                    ),
+                                    'textarea' => array(
+                                        'id' => array(),
+                                        'readonly' => array(),
+                                    ),
+                                    'button' => array(
+                                        'title' => array(),
+                                        'id' => array()
+                                    )  
                                 )
                             );
                         }
