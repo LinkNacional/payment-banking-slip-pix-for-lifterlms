@@ -7,25 +7,10 @@
 
   // Function to copy emv code and slip code in payment area.
   $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-
     $('#lkn_copy_code').click(function () {
-      const codigoEmv = $('#lkn_emvcode').val()
-      const buttonTitle = $('#lkn_copy_code')
-
-      navigator.clipboard.writeText(codigoEmv)
-        .then(function () {
-          buttonTitle.tooltip('dispose')
-          buttonTitle.tooltip({
-            title: SUCCESS
-          }).tooltip('show')
-        })
-        .catch(function (error) {
-          buttonTitle.tooltip('dispose')
-          buttonTitle.tooltip({
-            title: FAILURE, error
-          }).tooltip('show')
-        })
+      const linkInput = document.querySelector('#lkn_emvcode')
+      linkInput.select()
+      navigator.clipboard.writeText(linkInput.value)
     })
   })
 

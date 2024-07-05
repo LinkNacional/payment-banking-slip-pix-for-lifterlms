@@ -165,17 +165,28 @@ if (class_exists('LLMS_Payment_Gateway')) {
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo wp_kses(
+                            echo wp_kses_post(
                                 apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ),
                                 array(
                                     'h2' => array(),
                                     'div' => array(
-                                        'div' => array(
-                                            'img' => array(),
-                                            'textarea' => array(),
-                                            'button' => array()
-                                        )
-                                    )
+                                        'class' => array(),
+                                    ),
+                                    'div' => array(
+                                        'class' => array(),
+                                    ),
+                                    'img' => array(
+                                        'src' => array(),
+                                        'alt' => array(),
+                                    ),
+                                    'textarea' => array(
+                                        'id' => array(),
+                                        'readonly' => array(),
+                                    ),
+                                    'button' => array(
+                                        'title' => array(),
+                                        'id' => array()
+                                    )  
                                 )
                             );
                         }
