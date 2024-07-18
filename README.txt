@@ -76,7 +76,15 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 
 == Screenshots ==
 
-1. Nothing;
+1. List LifterLMS payment methods for PIX and Banking Slip.
+2. Payment method PIX settings page.
+3. Payment method PIX settings page.
+4. Payment method Banking Slip settings page.
+5. Payment method Banking Slip settings page.
+6. Payment method PIX front page.
+7. Payment method Banking Slip front page.
+8. PIX payment area.
+9. Banking Slip payment area.
 
 == Changelog ==
 
