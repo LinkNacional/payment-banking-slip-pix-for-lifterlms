@@ -9,7 +9,7 @@ env:
   PLUGIN_NAME: payment-banking-slip-pix-for-lifterlms
   DIR_NAME: payment-banking-slip-pix-for-lifterlms
   PHP_VERSION: "7.4"
-  DEPLOY_TAG: "5.3.3"
+  DEPLOY_TAG: "1.0.8"
 
 jobs:
   release-build:
