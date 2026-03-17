@@ -5,7 +5,7 @@ Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
 Tested up to: 6.6
 Stable tag: 1.0.7
-Requires PHP: 7.2
+Requires PHP: 8.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -87,6 +87,11 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 9. Banking Slip payment area.
 
 == Changelog ==
+
+= 1.0.8 =
+**17/03/2026**
+* New action system.
+* New icons.
 
 = 1.0.7 =
 **10/07/2024**
