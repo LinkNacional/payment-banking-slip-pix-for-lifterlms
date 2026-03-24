@@ -1,3 +1,7 @@
+# 1.0.8 - 17/03/2026
+* Novo sistema de action.
+* Novos ícones.
+
 # 1.0.7 - 10/07/2024
 * Mudança no método de geração de código de barras e sua implementação.
 

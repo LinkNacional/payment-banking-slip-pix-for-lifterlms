@@ -3,9 +3,9 @@ Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: lifterlms, bank, slip, pix, payment
 Requires at least: 5.5
-Tested up to: 6.5
-Stable tag: 1.0.7
-Requires PHP: 7.2
+Tested up to: 6.9
+Stable tag: 1.0.8
+Requires PHP: 8.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -76,9 +76,26 @@ The Payment Banking Slip Pix for LifterLMS is now activated.
 
 == Screenshots ==
 
-1. Nothing;
+1. List LifterLMS payment methods for PIX and Banking Slip.
+2. Payment method PIX settings page.
+3. Payment method PIX settings page.
+4. Payment method Banking Slip settings page.
+5. Payment method Banking Slip settings page.
+6. Payment method PIX front page.
+7. Payment method Banking Slip front page.
+8. PIX payment area.
+9. Banking Slip payment area.
 
 == Changelog ==
+
+= 1.0.8 =
+**17/03/2026**
+* New action system.
+* New icons.
+
+= 1.0.7 =
+**10/07/2024**
+* Change in the barcode generation method and its implementation.
 
 = 1.0.6 =
 **18/03/2024**
